@@ -1,0 +1,829 @@
+# SmartEstimate
+
+# 06. Database Design
+
+Version: 1.0
+
+Status: Draft
+
+Author: SmartEstimate Team
+
+Last Updated: 2026-08-03
+
+---
+
+# Purpose
+
+This document defines the database architecture of SmartEstimate.
+
+The database is designed to:
+
+- support large amounts of construction data;
+- support multiple companies;
+- support multiple countries;
+- support AI integration;
+- maintain complete history;
+- ensure data integrity;
+- remain scalable for many years.
+
+This document is independent of Entity Framework Core.
+
+---
+
+# Database Engine
+
+PostgreSQL
+
+Minimum Version
+
+17
+
+Reasons
+
+- Open Source
+- Excellent Performance
+- JSON Support
+- Full Text Search
+- Strong ACID Compliance
+- Rich Extension Ecosystem
+- Excellent .NET Support
+
+---
+
+# Design Principles
+
+The database must follow these principles.
+
+- Normalized (3NF by default)
+- Clear relationships
+- Explicit foreign keys
+- Immutable history
+- Soft delete
+- Multi-company
+- Region-aware
+- Versionable
+- Auditable
+- Cloud-ready
+
+---
+
+# Naming Convention
+
+## Tables
+
+Plural PascalCase
+
+Examples
+
+Companies
+
+Users
+
+Projects
+
+Estimates
+
+EstimateItems
+
+ConstructionWorks
+
+Materials
+
+---
+
+## Columns
+
+PascalCase
+
+Examples
+
+CreatedAt
+
+UpdatedAt
+
+PhoneNumber
+
+CompanyId
+
+---
+
+## Primary Keys
+
+Every table contains
+
+Id UUID
+
+UUID is used because:
+
+- safer for distributed systems;
+- easier synchronization;
+- future offline support;
+- public API friendly.
+
+---
+
+# Common Columns
+
+Every business table should contain:
+
+Id
+
+CreatedAt
+
+CreatedBy
+
+UpdatedAt
+
+UpdatedBy
+
+DeletedAt
+
+DeletedBy
+
+IsDeleted
+
+Version
+
+---
+
+# Soft Delete
+
+Business entities are never physically removed.
+
+Deleted entities remain recoverable.
+
+Only audit tables may use hard delete.
+
+---
+
+# Multi Tenancy
+
+Every company owns its own data.
+
+Every business table includes
+
+CompanyId
+
+The application layer guarantees that users cannot access data from another company.
+
+---
+
+# Audit Strategy
+
+Every important modification is recorded.
+
+Audit data includes:
+
+Entity
+
+Action
+
+Timestamp
+
+User
+
+Old Value
+
+New Value
+
+Reason
+
+---
+
+# Main Database Modules
+
+Identity
+
+Companies
+
+Customers
+
+Projects
+
+Estimates
+
+Knowledge
+
+Pricing
+
+Materials
+
+AI
+
+Reporting
+
+Administration
+
+---
+
+# Identity Module
+
+## Users
+
+Purpose
+
+Stores application users.
+
+Relationships
+
+Company
+
+↓
+
+Users
+
+Columns
+
+Id
+
+CompanyId
+
+Email
+
+PasswordHash
+
+FirstName
+
+LastName
+
+Phone
+
+IsActive
+
+LastLogin
+
+CreatedAt
+
+UpdatedAt
+
+---
+
+## Roles
+
+Purpose
+
+System roles.
+
+Examples
+
+Administrator
+
+Owner
+
+Estimator
+
+Employee
+
+---
+
+## Permissions
+
+Stores fine-grained permissions.
+
+---
+
+# Company Module
+
+## Companies
+
+Purpose
+
+Represents construction companies.
+
+Columns
+
+Id
+
+Name
+
+Country
+
+Currency
+
+Phone
+
+Email
+
+Website
+
+LogoUrl
+
+CreatedAt
+
+UpdatedAt
+
+---
+
+## CompanySettings
+
+Stores configurable settings.
+
+Examples
+
+Currency
+
+Language
+
+Theme
+
+TimeZone
+
+DefaultTaxRate
+
+---
+
+# Customer Module
+
+## Customers
+
+Columns
+
+Id
+
+CompanyId
+
+FirstName
+
+LastName
+
+Phone
+
+Email
+
+Notes
+
+CreatedAt
+
+UpdatedAt
+
+---
+
+## CustomerAddresses
+
+Supports multiple addresses.
+
+---
+
+# Project Module
+
+## Projects
+
+Columns
+
+Id
+
+CompanyId
+
+CustomerId
+
+Name
+
+ConstructionType
+
+Status
+
+Address
+
+Area
+
+Rooms
+
+Floors
+
+CeilingHeight
+
+Description
+
+CreatedAt
+
+UpdatedAt
+
+---
+
+## ProjectPhotos
+
+Stores project images.
+
+---
+
+## ProjectAttachments
+
+Stores project files.
+
+---
+
+# Estimate Module
+
+## Estimates
+
+Columns
+
+Id
+
+CompanyId
+
+ProjectId
+
+EstimateNumber
+
+Status
+
+TotalLabor
+
+TotalMaterials
+
+Discount
+
+Tax
+
+GrandTotal
+
+Notes
+
+CreatedAt
+
+UpdatedAt
+
+---
+
+## EstimateItems
+
+Columns
+
+Id
+
+EstimateId
+
+ConstructionWorkId
+
+Quantity
+
+Unit
+
+Price
+
+Total
+
+Comment
+
+DisplayOrder
+
+---
+
+## EstimateHistory
+
+Immutable history.
+
+Every estimate modification is stored.
+
+---
+
+# Knowledge Module
+
+## Categories
+
+Hierarchical categories.
+
+---
+
+## ConstructionWorks
+
+Contains construction works.
+
+---
+
+## ConstructionProcesses
+
+Stores construction workflows.
+
+---
+
+## Dependencies
+
+Stores work dependencies.
+
+Example
+
+Painting
+
+↓
+
+requires
+
+Primer
+
+---
+
+## Recommendations
+
+Stores recommendation rules.
+
+---
+
+## ConstructionStages
+
+Planning
+
+Preparation
+
+Painting
+
+Finishing
+
+Inspection
+
+---
+
+# Materials Module
+
+## Materials
+
+Construction materials.
+
+---
+
+## MaterialConsumptionRules
+
+Example
+
+Paint
+
+↓
+
+0.125 L / m²
+
+---
+
+## MaterialPackages
+
+Stores available package sizes.
+
+---
+
+# Pricing Module
+
+## CompanyPrices
+
+Company-specific prices.
+
+---
+
+## MarketPrices
+
+Average regional prices.
+
+---
+
+## PriceHistory
+
+Immutable.
+
+---
+
+## PriceRecommendations
+
+Generated by AI.
+
+Contains
+
+Old Price
+
+Suggested Price
+
+Confidence
+
+Explanation
+
+Status
+
+---
+
+# AI Module
+
+## AIRecommendations
+
+Stores AI-generated recommendations.
+
+---
+
+## AIJobs
+
+Tracks background AI tasks.
+
+---
+
+## AIResponses
+
+Stores raw AI responses when required.
+
+---
+
+# Reporting Module
+
+Stores aggregated reporting data.
+
+No business logic.
+
+---
+
+# Relationships
+
+Company
+
+├── Users
+
+├── Customers
+
+├── Projects
+
+├── Estimates
+
+├── Prices
+
+└── Settings
+
+Customer
+
+└── Projects
+
+Project
+
+├── Photos
+
+├── Attachments
+
+└── Estimates
+
+Estimate
+
+├── EstimateItems
+
+├── History
+
+└── Attachments
+
+ConstructionWork
+
+├── Dependencies
+
+├── Recommendations
+
+├── Materials
+
+└── ConsumptionRules
+
+---
+
+# Index Strategy
+
+Indexes must exist for:
+
+CompanyId
+
+CustomerId
+
+ProjectId
+
+EstimateId
+
+ConstructionWorkId
+
+MaterialId
+
+Status
+
+CreatedAt
+
+UpdatedAt
+
+Email
+
+Phone
+
+---
+
+# Search
+
+PostgreSQL Full Text Search
+
+Searchable entities
+
+Customers
+
+Projects
+
+Construction Works
+
+Materials
+
+Estimates
+
+---
+
+# JSON Usage
+
+JSONB may be used for:
+
+AI Metadata
+
+External API Responses
+
+Dynamic Settings
+
+Search Metadata
+
+No critical business data should depend on JSON.
+
+---
+
+# File Storage
+
+Database stores metadata only.
+
+Actual files are stored externally.
+
+Examples
+
+Photos
+
+PDF
+
+Documents
+
+Voice Files
+
+---
+
+# Migration Strategy
+
+Entity Framework Core Migrations.
+
+One migration per feature.
+
+Never modify existing migrations after production.
+
+---
+
+# Backup Strategy
+
+Daily Full Backup
+
+Hourly Incremental Backup
+
+Point-in-Time Recovery
+
+---
+
+# Scaling Strategy
+
+Current
+
+Single PostgreSQL Instance
+
+Future
+
+Read Replicas
+
+Partitioning
+
+Connection Pooling
+
+Caching
+
+Cloud Storage
+
+---
+
+# Future Extensions
+
+Multi-country pricing
+
+Supplier catalogs
+
+Warehouse management
+
+Offline synchronization
+
+Marketplace
+
+Construction standards
+
+Analytics
+
+---
+
+# Summary
+
+The SmartEstimate database is designed to be:
+
+- scalable;
+- modular;
+- AI-ready;
+- cloud-native;
+- independent from implementation details.
+
+The schema prioritizes business integrity over framework convenience.
+
+---
+
+End of Document
