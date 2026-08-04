@@ -1,0 +1,91 @@
+{
+  "estimateEditor": {
+    "catalog": {
+      "addItem": "Додати до кошторису",
+      "allCategories": "Усі категорії",
+      "category": "Категорія",
+      "constructionWork": "Будівельна робота",
+      "description": "Оберіть затверджену будівельну роботу або матеріал для додавання.",
+      "errorDescription": "Перевірте з'єднання та спробуйте ще раз.",
+      "errorTitle": "Каталог недоступний",
+      "itemType": "Тип позиції каталогу",
+      "loading": "Завантаження каталогу...",
+      "material": "Матеріал",
+      "retry": "Спробувати ще раз",
+      "selectItem": "Оберіть позицію",
+      "title": "Провідник знань",
+      "unit": "Одиниця вимірювання",
+      "unitHelp": "Одиниця підставляється з обраної позиції каталогу.",
+      "unitPlaceholder": "Оберіть позицію каталогу",
+      "work": "Робота"
+    }
+  },
+  "knowledgeStudio": {
+    "actions": {
+      "archive": "Архівувати",
+      "cancel": "Скасувати",
+      "new": "Нова позиція",
+      "next": "Наступна сторінка",
+      "previous": "Попередня сторінка",
+      "save": "Зберегти"
+    },
+    "ai": { "comingSoon": "Заповнити з AI — Sprint 5" },
+    "card": { "createdAt": "Створено", "id": "ID", "updatedAt": "Оновлено", "version": "Версія" },
+    "description": "Керуйте будівельними знаннями без редагування YAML-файлів.",
+    "empty": {
+      "description": "Створіть першу позицію для цього розділу.",
+      "title": "Позицій ще немає"
+    },
+    "error": "Не вдалося завантажити дані Knowledge Studio.",
+    "filters": {
+      "allCategories": "Усі категорії",
+      "allStatuses": "Усі статуси",
+      "category": "Категорія",
+      "search": "Пошук",
+      "sort": "Сортування",
+      "status": "Статус"
+    },
+    "form": {
+      "category": "Категорія",
+      "createTitle": "Створити: {{resource}}",
+      "description": "Обов’язковою є українська назва. Англійська та німецька мають передбачений fallback.",
+      "descriptionLabel": "Опис",
+      "editTitle": "Редагувати позицію",
+      "nameDe": "Німецька назва",
+      "nameEn": "Англійська назва",
+      "nameUk": "Українська назва",
+      "none": "Немає",
+      "parentCategory": "Батьківська категорія",
+      "selectCategory": "Оберіть категорію",
+      "selectUnit": "Оберіть одиницю",
+      "status": "Статус",
+      "symbol": "Позначення",
+      "tags": "Теги",
+      "tagsPlaceholder": "через кому",
+      "unit": "Одиниця вимірювання"
+    },
+    "loading": "Завантаження Knowledge Studio…",
+    "messages": {
+      "archiveError": "Не вдалося архівувати позицію.",
+      "archived": "Позицію архівовано.",
+      "saveError": "Не вдалося зберегти позицію.",
+      "saved": "Позицію збережено."
+    },
+    "pagination": "Сторінка {{page}} з {{total}}",
+    "resourceTabs": "Розділи Knowledge Studio",
+    "resources": {
+      "categories": "Категорії",
+      "materials": "Матеріали",
+      "units": "Одиниці",
+      "works": "Будівельні роботи"
+    },
+    "sort": {
+      "name": "Назва: А–Я",
+      "nameDescending": "Назва: Я–А",
+      "newest": "Спочатку нові",
+      "oldest": "Спочатку старі"
+    },
+    "status": { "active": "Активна", "archived": "Архівна", "draft": "Чернетка" },
+    "title": "Knowledge Studio"
+  }
+}

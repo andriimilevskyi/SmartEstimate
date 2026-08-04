@@ -1,0 +1,16 @@
+id: putty
+
+name:
+  uk: Шпаклювання стін
+  en: Wall Puttying
+  de: Wände spachteln
+
+description: Levelling wall surfaces with finishing putty.
+
+category: walls
+
+unit: m2
+
+materials:
+  - putty
+  - primer-material

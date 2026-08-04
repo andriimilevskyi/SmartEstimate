@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "retry": "Try again"
+  },
+  "errors": {
+    "requestFailed": "The request could not be completed."
+  },
+  "foundation": {
+    "description": "The SmartEstimate application shell is prepared for the first business module.",
+    "eyebrow": "Sprint 0",
+    "statusDescription": "Routing, shared providers, design tokens, and UI primitives are configured. Business workflows are intentionally not implemented yet.",
+    "statusTitle": "Foundation status",
+    "title": "Frontend foundation is ready"
+  },
+  "language": {
+    "label": "Interface language",
+    "options": {
+      "de": "Deutsch",
+      "en": "English",
+      "uk": "Українська"
+    }
+  },
+  "notFound": {
+    "action": "Return to estimates",
+    "code": "404",
+    "description": "The requested workspace is not available.",
+    "title": "Page not found"
+  },
+  "shell": {
+    "collapseSidebar": "Collapse sidebar",
+    "estimates": "Estimates",
+    "expandSidebar": "Expand sidebar",
+    "foundation": "Foundation",
+    "knowledgeStudio": "Knowledge Studio",
+    "primaryNavigation": "Primary navigation",
+    "productName": "SmartEstimate",
+    "skipToContent": "Skip to workspace"
+  }
+}

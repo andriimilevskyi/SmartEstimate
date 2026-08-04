@@ -1,0 +1,16 @@
+id: painting
+
+name:
+  uk: Фарбування стін
+  en: Wall Painting
+  de: Wände streichen
+
+description: Application of finishing paint coats to prepared interior walls.
+
+category: walls
+
+unit: m2
+
+materials:
+  - paint
+  - primer-material

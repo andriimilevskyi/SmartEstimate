@@ -1,0 +1,15 @@
+id: primer
+
+name:
+  uk: Ґрунтування стін
+  en: Wall Priming
+  de: Wände grundieren
+
+description: Applying primer to prepared wall surfaces before subsequent finishing work.
+
+category: walls
+
+unit: m2
+
+materials:
+  - primer-material

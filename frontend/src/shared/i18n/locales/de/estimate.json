@@ -1,0 +1,190 @@
+{
+  "estimateDetails": {
+    "backToList": "Zurück zu Kostenvoranschlägen",
+    "createdAt": "Erstellt {{date}}",
+    "eyebrow": "Details zum Kostenvoranschlag",
+    "grandTotal": "Gesamtsumme",
+    "laborTotal": "Arbeiten",
+    "materialsTotal": "Materialien",
+    "notFoundDescription": "Der Kostenvoranschlag wurde möglicherweise gelöscht oder ist nicht mehr verfügbar.",
+    "notFoundTitle": "Kostenvoranschlag nicht gefunden",
+    "notes": "Notiz",
+    "objectAddress": "Objektadresse",
+    "objectArea": "{{area}} m²",
+    "objectType": "Objekttyp",
+    "totals": "Summen",
+    "unavailableDescription": "Prüfen Sie die Verbindung und versuchen Sie es erneut.",
+    "unavailableTitle": "Kostenvoranschlag ist nicht verfügbar"
+  },
+  "estimateEditor": {
+    "catalog": {
+      "add": "Position hinzufügen",
+      "allCategories": "Alle Kategorien",
+      "category": "Arbeitskategorie",
+      "constructionWork": "Bauarbeit",
+      "material": "Material",
+      "search": "Schnellsuche",
+      "searchPlaceholder": "Zum Beispiel: Spachteln, Fliesen, Kabel...",
+      "selectItem": "Position auswählen",
+      "title": "Positionskatalog",
+      "unit": "Maßeinheit",
+      "unitPlaceholder": "Position auswählen",
+      "work": "Arbeiten"
+    },
+    "description": "Fügen Sie Arbeiten und Materialien direkt zur passenden Zone hinzu und bearbeiten Sie Mengen, Preise und Kommentare ohne Umwege.",
+    "item": {
+      "delete": "Entfernen",
+      "deleteConfirmation": "Diese Position aus dem Kostenvoranschlag entfernen?",
+      "duplicate": "Duplizieren",
+      "lineTotal": "Zeilensumme",
+      "notes": "Kommentar",
+      "notesPlaceholder": "Hinweis zur Ausführung oder Beschaffung",
+      "quantity": "Menge",
+      "saving": "Speichern...",
+      "unitPrice": "Einheitspreis"
+    },
+    "itemCount": "{{count}} Positionen",
+    "materialItems": {
+      "empty": "Fügen Sie zunächst ein Material aus dem Katalog hinzu.",
+      "title": "Materialpositionen"
+    },
+    "messages": {
+      "added": "Position wurde zum Kostenvoranschlag hinzugefügt.",
+      "addError": "Die Position konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",
+      "deleted": "Position wurde aus dem Kostenvoranschlag entfernt.",
+      "deleteError": "Die Position konnte nicht entfernt werden. Bitte versuchen Sie es erneut.",
+      "duplicated": "Position wurde dupliziert.",
+      "duplicateError": "Die Position konnte nicht dupliziert werden. Bitte versuchen Sie es erneut.",
+      "updateError": "Die Position konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+      "updateValidationError": "Geben Sie eine gültige Menge und einen gültigen Einheitspreis ein.",
+      "zoneError": "Die Zone konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+    },
+    "title": "Kostenvoranschlag bearbeiten",
+    "totals": {
+      "description": "Wird beim Bearbeiten der Positionswerte aktualisiert.",
+      "title": "Summen des Kostenvoranschlags"
+    },
+    "workItems": {
+      "empty": "Fügen Sie zunächst eine Bauarbeit aus dem Katalog hinzu.",
+      "title": "Arbeitspositionen"
+    },
+    "validation": {
+      "catalogItem": "Wählen Sie eine Position aus dem Katalog."
+    },
+    "zone": {
+      "add": "Zone hinzufügen",
+      "current": "Zone",
+      "delete": "Zone löschen",
+      "deleteConfirmation": "Diese Zone zusammen mit ihren Arbeiten und Materialien löschen?",
+      "moveDown": "Nach unten verschieben",
+      "moveUp": "Nach oben verschieben",
+      "newName": "Name der neuen Zone"
+    }
+  },
+  "estimates": {
+    "create": {
+      "action": "Kostenvoranschlag erstellen",
+      "back": "Zurück",
+      "cancel": "Abbrechen",
+      "decreaseZone": "Zonenanzahl verringern",
+      "description": "Erstellen Sie die Struktur rund um das reale Objekt: Typ, Fläche, Adresse und Arbeitszonen.",
+      "futureZones": "Zu erstellende Zonen: {{count}}",
+      "increaseZone": "Zonenanzahl erhöhen",
+      "next": "Zonen konfigurieren",
+      "noZones": "Wählen Sie mindestens eine Zone für den Kostenvoranschlag.",
+      "stepObject": "Schritt 1: Objektdaten",
+      "stepZones": "Schritt 2: Konfiguration der Renovierungszonen",
+      "submit": "Kostenvoranschlag erstellen",
+      "title": "Kostenvoranschlag erstellen",
+      "zoneDraftNotice": "Konfigurieren Sie die zukünftige Objektstruktur. Es wurden noch keine Zonen erstellt; sie werden erst nach Klick auf Kostenvoranschlag erstellen gespeichert."
+    },
+    "delete": {
+      "action": "Löschen",
+      "confirmation": "Diesen Kostenvoranschlag löschen? Er ist danach im Arbeitsbereich nicht mehr verfügbar."
+    },
+    "description": "Erstellen und prüfen Sie die ersten Kostenvoranschläge in Ihrem Arbeitsbereich.",
+    "eyebrow": "Sprint 1",
+    "form": {
+      "currency": "Währung",
+      "currencyPlaceholder": "UAH",
+      "notes": "Notiz",
+      "notesPlaceholder": "Notiz zu diesem Kostenvoranschlag hinzufügen",
+      "number": "Nummer des Kostenvoranschlags",
+      "numberPlaceholder": "EST-001",
+      "objectAddress": "Objektadresse",
+      "objectAddressPlaceholder": "Kyiv, Velyka Vasylkivska Str. 72",
+      "objectType": "Objekttyp",
+      "totalArea": "Gesamtfläche, m²",
+      "totalAreaPlaceholder": "86.5"
+    },
+    "list": {
+      "count": "{{count}} insgesamt",
+      "title": "Alle Kostenvoranschläge"
+    },
+    "messages": {
+      "created": "Kostenvoranschlag wurde erstellt.",
+      "createError": "Der Kostenvoranschlag konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
+      "deleted": "Kostenvoranschlag wurde gelöscht.",
+      "deleteError": "Der Kostenvoranschlag konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+    },
+    "objectTypes": {
+      "Apartment": "Wohnung",
+      "CommercialSpace": "Gewerbefläche",
+      "IndustrialSpace": "Produktionsfläche",
+      "Office": "Büro",
+      "Other": "Sonstiges",
+      "PrivateHouse": "Privathaus"
+    },
+    "scope": {
+      "full": "Renovierung des gesamten Objekts",
+      "partial": "Nur ausgewählte Zonen"
+    },
+    "states": {
+      "emptyDescription": "Erstellen Sie den ersten Kostenvoranschlag, um zu beginnen.",
+      "emptyTitle": "Noch keine Kostenvoranschläge",
+      "error": "Kostenvoranschläge sind derzeit nicht verfügbar. Prüfen Sie die Verbindung und versuchen Sie es erneut.",
+      "loading": "Kostenvoranschläge werden geladen...",
+      "retry": "Erneut versuchen"
+    },
+    "title": "Kostenvoranschläge",
+    "validation": {
+      "currency": "Verwenden Sie einen ISO-Währungscode, zum Beispiel UAH.",
+      "number": "Geben Sie eine Nummer oder einen Titel ein.",
+      "zones": "Fügen Sie mindestens eine Renovierungszone hinzu."
+    },
+    "zones": {
+      "balcony": "Balkon",
+      "bathroom": "Bad",
+      "bedroom": "Schlafzimmer",
+      "boilerRoom": "Heizraum",
+      "cabinet": "Arbeitszimmer",
+      "cashDesk": "Kassenbereich",
+      "entranceGroup": "Eingangsbereich",
+      "facade": "Fassade",
+      "garage": "Garage",
+      "hallway": "Flur",
+      "kitchen": "Küche",
+      "kitchenette": "Teeküche",
+      "livingRoom": "Wohnzimmer",
+      "lockerRoom": "Umkleideraum",
+      "mainArea": "Hauptbereich",
+      "managerOffice": "Leitungsbüro",
+      "meetingRoom": "Besprechungsraum",
+      "officeArea": "Bürobereich",
+      "openSpace": "Open Space",
+      "productionHall": "Produktionshalle",
+      "reception": "Empfang",
+      "salesArea": "Verkaufsfläche",
+      "serverRoom": "Serverraum",
+      "staffRoom": "Personalraum",
+      "stairs": "Treppe",
+      "storage": "Lager",
+      "technicalRoom": "Technikraum",
+      "terrace": "Terrasse",
+      "toilet": "WC",
+      "utilityRoom": "Hauswirtschaftsraum",
+      "wardrobe": "Garderobe",
+      "warehouse": "Lagerbereich"
+    }
+  }
+}

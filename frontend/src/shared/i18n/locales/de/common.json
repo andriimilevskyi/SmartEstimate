@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "retry": "Erneut versuchen"
+  },
+  "errors": {
+    "requestFailed": "Die Anfrage konnte nicht abgeschlossen werden."
+  },
+  "foundation": {
+    "description": "Die SmartEstimate-Anwendungsschale ist für das erste Geschäftsmodul vorbereitet.",
+    "eyebrow": "Sprint 0",
+    "statusDescription": "Routing, gemeinsame Provider, Design Tokens und UI-Grundbausteine sind eingerichtet. Geschäftsabläufe sind bewusst noch nicht implementiert.",
+    "statusTitle": "Foundation-Status",
+    "title": "Frontend-Foundation ist bereit"
+  },
+  "language": {
+    "label": "Sprache der Oberfläche",
+    "options": {
+      "de": "Deutsch",
+      "en": "English",
+      "uk": "Українська"
+    }
+  },
+  "notFound": {
+    "action": "Zurück zu Kostenvoranschlägen",
+    "code": "404",
+    "description": "Der angeforderte Arbeitsbereich ist nicht verfügbar.",
+    "title": "Seite nicht gefunden"
+  },
+  "shell": {
+    "collapseSidebar": "Seitenleiste einklappen",
+    "estimates": "Kostenvoranschläge",
+    "expandSidebar": "Seitenleiste ausklappen",
+    "foundation": "Foundation",
+    "knowledgeStudio": "Knowledge Studio",
+    "primaryNavigation": "Hauptnavigation",
+    "productName": "SmartEstimate",
+    "skipToContent": "Zum Arbeitsbereich springen"
+  }
+}

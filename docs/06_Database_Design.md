@@ -480,15 +480,35 @@ Every estimate modification is stored.
 
 # Knowledge Module
 
+PostgreSQL is the single source of truth for operational knowledge. YAML is not a
+database source and is used only by future import/export and backup workflows.
+
 ## Categories
 
-Hierarchical categories.
+Hierarchical categories. Each row has localized names, optional description,
+ParentCategoryId, Status, Version, and common audit columns.
 
 ---
 
 ## ConstructionWorks
 
-Contains construction works.
+Contains construction works. Each row references exactly one category and one unit,
+stores localized names, description, tags, Status, Version, and common audit
+columns. Only Active rows can be used in estimates.
+
+## KnowledgeMaterials
+
+Contains materials. Each row references one unit and may reference a category. It
+stores localized names, description, tags, Status, Version, and common audit
+columns. Only Active rows can be used in estimates.
+
+## MeasurementUnits
+
+Contains units. Each row stores a unique symbol, localized names, Status, Version,
+and common audit columns. Only Active units can be used in estimates.
+
+Knowledge records are soft-deleted by changing Status to Archived. Foreign-key
+integrity is preserved; physical deletion is not part of the Knowledge Studio MVP.
 
 ---
 
@@ -761,6 +781,10 @@ Entity Framework Core Migrations.
 One migration per feature.
 
 Never modify existing migrations after production.
+
+Knowledge schema changes are delivered in EF Core migrations. Future YAML import
+and export implementations use Application abstractions and never bypass
+PostgreSQL.
 
 ---
 

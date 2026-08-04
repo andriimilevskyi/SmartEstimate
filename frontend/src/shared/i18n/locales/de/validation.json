@@ -1,0 +1,16 @@
+{
+  "estimateEditor": {
+    "validation": {
+      "catalogItem": "Wählen Sie eine Position aus dem Katalog.",
+      "quantity": "Geben Sie eine Menge größer als null ein.",
+      "unitPrice": "Geben Sie einen Einheitspreis von null oder höher ein."
+    }
+  },
+  "estimates": {
+    "validation": {
+      "currency": "Verwenden Sie einen dreibuchstabigen Währungscode.",
+      "notes": "Die Notiz darf höchstens 2.000 Zeichen enthalten.",
+      "number": "Geben Sie eine Nummer mit höchstens 64 Zeichen ein."
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "estimateEditor": {
+    "validation": {
+      "catalogItem": "Select an item from the catalog.",
+      "quantity": "Enter a quantity greater than zero.",
+      "unitPrice": "Enter a unit price of zero or more."
+    }
+  },
+  "estimates": {
+    "validation": {
+      "currency": "Use a three-letter currency code.",
+      "notes": "The note must contain no more than 2,000 characters.",
+      "number": "Enter an estimate number of up to 64 characters."
+    }
+  }
+}

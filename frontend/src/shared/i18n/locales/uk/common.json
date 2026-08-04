@@ -1,0 +1,39 @@
+{
+  "actions": {
+    "retry": "Спробувати ще раз"
+  },
+  "errors": {
+    "requestFailed": "Не вдалося виконати запит."
+  },
+  "foundation": {
+    "description": "Оболонка SmartEstimate підготовлена до першого бізнес-модуля.",
+    "eyebrow": "Спринт 0",
+    "statusDescription": "Налаштовані маршрутизація, спільні провайдери, дизайн-токени та UI-примітиви. Бізнес-сценарії навмисно ще не реалізовані.",
+    "statusTitle": "Стан фундаменту",
+    "title": "Фундамент frontend готовий"
+  },
+  "language": {
+    "label": "Мова інтерфейсу",
+    "options": {
+      "de": "Deutsch",
+      "en": "English",
+      "uk": "Українська"
+    }
+  },
+  "notFound": {
+    "action": "Повернутися до кошторисів",
+    "code": "404",
+    "description": "Запитаний робочий простір недоступний.",
+    "title": "Сторінку не знайдено"
+  },
+  "shell": {
+    "collapseSidebar": "Згорнути бічну панель",
+    "estimates": "Кошториси",
+    "expandSidebar": "Розгорнути бічну панель",
+    "foundation": "Фундамент",
+    "knowledgeStudio": "Knowledge Studio",
+    "primaryNavigation": "Основна навігація",
+    "productName": "SmartEstimate",
+    "skipToContent": "Перейти до робочого простору"
+  }
+}

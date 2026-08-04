@@ -1,0 +1,190 @@
+{
+  "estimateDetails": {
+    "backToList": "Back to estimates",
+    "createdAt": "Created {{date}}",
+    "eyebrow": "Estimate details",
+    "grandTotal": "Grand total",
+    "laborTotal": "Labor",
+    "materialsTotal": "Materials",
+    "notFoundDescription": "The estimate may have been deleted or is no longer available.",
+    "notFoundTitle": "Estimate not found",
+    "notes": "Note",
+    "objectAddress": "Object address",
+    "objectArea": "{{area}} m²",
+    "objectType": "Object type",
+    "totals": "Totals",
+    "unavailableDescription": "Check your connection and try again.",
+    "unavailableTitle": "Estimate is unavailable"
+  },
+  "estimateEditor": {
+    "catalog": {
+      "add": "Add item",
+      "allCategories": "All categories",
+      "category": "Work category",
+      "constructionWork": "Construction work",
+      "material": "Material",
+      "search": "Quick search",
+      "searchPlaceholder": "For example: putty, tile, cable...",
+      "selectItem": "Select an item",
+      "title": "Item catalog",
+      "unit": "Measurement unit",
+      "unitPlaceholder": "Select an item",
+      "work": "Works"
+    },
+    "description": "Add works and materials directly to the right zone, then edit quantities, prices, and comments without leaving the editor.",
+    "item": {
+      "delete": "Remove",
+      "deleteConfirmation": "Remove this item from the estimate?",
+      "duplicate": "Duplicate",
+      "lineTotal": "Line total",
+      "notes": "Comment",
+      "notesPlaceholder": "Execution or procurement note",
+      "quantity": "Quantity",
+      "saving": "Saving...",
+      "unitPrice": "Unit price"
+    },
+    "itemCount": "{{count}} items",
+    "materialItems": {
+      "empty": "Add a material from the catalog to begin.",
+      "title": "Material items"
+    },
+    "messages": {
+      "added": "Item added to the estimate.",
+      "addError": "The item could not be added. Please try again.",
+      "deleted": "Item removed from the estimate.",
+      "deleteError": "The item could not be removed. Please try again.",
+      "duplicated": "Item duplicated.",
+      "duplicateError": "The item could not be duplicated. Please try again.",
+      "updateError": "The item could not be updated. Please try again.",
+      "updateValidationError": "Enter a valid quantity and unit price.",
+      "zoneError": "The zone could not be updated. Please try again."
+    },
+    "title": "Estimate editor",
+    "totals": {
+      "description": "Updates as you edit item values.",
+      "title": "Estimate totals"
+    },
+    "workItems": {
+      "empty": "Add a construction work from the catalog to begin.",
+      "title": "Work items"
+    },
+    "validation": {
+      "catalogItem": "Select an item from the catalog."
+    },
+    "zone": {
+      "add": "Add zone",
+      "current": "Zone",
+      "delete": "Delete zone",
+      "deleteConfirmation": "Delete this zone together with its works and materials?",
+      "moveDown": "Move down",
+      "moveUp": "Move up",
+      "newName": "New zone name"
+    }
+  },
+  "estimates": {
+    "create": {
+      "action": "Create estimate",
+      "back": "Back",
+      "cancel": "Cancel",
+      "decreaseZone": "Decrease zone count",
+      "description": "Create the estimate structure around the real object: type, area, address, and work zones.",
+      "futureZones": "Zones to be created: {{count}}",
+      "increaseZone": "Increase zone count",
+      "next": "Configure zones",
+      "noZones": "Select at least one zone for the estimate.",
+      "stepObject": "Step 1: object details",
+      "stepZones": "Step 2: repair zone configuration",
+      "submit": "Create estimate",
+      "title": "Create estimate",
+      "zoneDraftNotice": "Configure the future object structure. No zones have been created yet; they will be saved only after you click Create estimate."
+    },
+    "delete": {
+      "action": "Delete",
+      "confirmation": "Delete this estimate? It will no longer be available in the workspace."
+    },
+    "description": "Create and review the first estimates in your workspace.",
+    "eyebrow": "Sprint 1",
+    "form": {
+      "currency": "Currency",
+      "currencyPlaceholder": "UAH",
+      "notes": "Note",
+      "notesPlaceholder": "Add a note for this estimate",
+      "number": "Estimate number",
+      "numberPlaceholder": "EST-001",
+      "objectAddress": "Object address",
+      "objectAddressPlaceholder": "Kyiv, Velyka Vasylkivska St, 72",
+      "objectType": "Object type",
+      "totalArea": "Total area, m²",
+      "totalAreaPlaceholder": "86.5"
+    },
+    "list": {
+      "count": "{{count}} total",
+      "title": "All estimates"
+    },
+    "messages": {
+      "created": "Estimate created.",
+      "createError": "The estimate could not be created. Please try again.",
+      "deleted": "Estimate deleted.",
+      "deleteError": "The estimate could not be deleted. Please try again."
+    },
+    "objectTypes": {
+      "Apartment": "Apartment",
+      "CommercialSpace": "Commercial space",
+      "IndustrialSpace": "Industrial space",
+      "Office": "Office",
+      "Other": "Other",
+      "PrivateHouse": "Private house"
+    },
+    "scope": {
+      "full": "Whole-object renovation",
+      "partial": "Selected zones only"
+    },
+    "states": {
+      "emptyDescription": "Create the first estimate to begin.",
+      "emptyTitle": "No estimates yet",
+      "error": "Estimates are unavailable right now. Check your connection and try again.",
+      "loading": "Loading estimates...",
+      "retry": "Try again"
+    },
+    "title": "Estimates",
+    "validation": {
+      "currency": "Use an ISO currency code, for example UAH.",
+      "number": "Enter an estimate number or title.",
+      "zones": "Add at least one repair zone."
+    },
+    "zones": {
+      "balcony": "Balcony",
+      "bathroom": "Bathroom",
+      "bedroom": "Bedroom",
+      "boilerRoom": "Boiler room",
+      "cabinet": "Cabinet",
+      "cashDesk": "Cash desk",
+      "entranceGroup": "Entrance group",
+      "facade": "Facade",
+      "garage": "Garage",
+      "hallway": "Hallway",
+      "kitchen": "Kitchen",
+      "kitchenette": "Kitchenette",
+      "livingRoom": "Living room",
+      "lockerRoom": "Locker room",
+      "mainArea": "Main area",
+      "managerOffice": "Manager office",
+      "meetingRoom": "Meeting room",
+      "officeArea": "Office area",
+      "openSpace": "Open space",
+      "productionHall": "Production hall",
+      "reception": "Reception",
+      "salesArea": "Sales area",
+      "serverRoom": "Server room",
+      "staffRoom": "Staff room",
+      "stairs": "Stairs",
+      "storage": "Storage",
+      "technicalRoom": "Technical room",
+      "terrace": "Terrace",
+      "toilet": "Toilet",
+      "utilityRoom": "Utility room",
+      "wardrobe": "Wardrobe",
+      "warehouse": "Warehouse area"
+    }
+  }
+}

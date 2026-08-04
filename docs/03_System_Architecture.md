@@ -78,6 +78,20 @@ Event Driven communication
 
 ---
 
+# Knowledge Persistence Decision
+
+PostgreSQL is the single source of truth for operational construction knowledge.
+Knowledge Studio, the Estimate Editor, and all backend use cases access categories,
+construction works, materials, and measurement units through Application-layer
+repository abstractions. Infrastructure implements those abstractions with EF Core
+and PostgreSQL. Normal application requests never read YAML files.
+
+The repository-level `knowledge/` directory remains a non-operational interchange
+format, reserved for future import, export, backup, and catalogue exchange. YAML
+is not a runtime dependency of the backend and does not own production data.
+
+---
+
 # Solution Structure
 
 SmartEstimate.sln
@@ -113,6 +127,9 @@ frontend/
 docker/
 
 .github/
+
+The `knowledge/` directory contains import/export artefacts only. It is not mounted
+or read by the application during normal operation.
 
 ---
 

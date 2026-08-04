@@ -1,0 +1,15 @@
+{
+  "navigation": {
+    "aiAssistant": "AI-Assistent",
+    "customers": "Kunden",
+    "dashboard": "Übersicht",
+    "estimates": "Kostenvoranschläge",
+    "knowledge": "Wissensbasis",
+    "knowledgeStudio": "Knowledge Studio",
+    "materials": "Materialien",
+    "pricing": "Preisfindung",
+    "projects": "Projekte",
+    "reports": "Berichte",
+    "settings": "Einstellungen"
+  }
+}

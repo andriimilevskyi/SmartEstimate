@@ -103,13 +103,16 @@ SmartEstimate.Application
 
 SmartEstimate.Domain
 
-SmartEstimate.Knowledge
-
 SmartEstimate.Infrastructure
 
 SmartEstimate.Contracts
 
 SmartEstimate.Shared
+
+Knowledge is a bounded context implemented through Application-layer abstractions
+and Infrastructure adapters. A separate `SmartEstimate.Knowledge` project is not
+part of the approved solution structure; its previous mention is superseded by this
+decision.
 
 tests/
 
@@ -161,13 +164,8 @@ Events
 
 Knowledge
 
-Construction Rules
-
-Dependencies
-
-Templates
-
-Consumption Rules
+Use cases, DTOs, validators, repository abstractions, and future Import/Export
+abstractions. Operational records are stored in PostgreSQL.
 
 Infrastructure
 
@@ -466,6 +464,10 @@ Market Prices
 Settings
 
 Reference Data
+
+The cached/read model of Knowledge must be invalidated or updated after every
+successful transaction. In the Knowledge Studio MVP PostgreSQL is read directly;
+future caching remains an Infrastructure concern.
 
 ---
 

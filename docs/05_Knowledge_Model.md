@@ -49,6 +49,17 @@ Knowledge must be:
 - independent from AI models;
 - independent from implementation.
 
+## Operational Storage and Interchange
+
+PostgreSQL is the single source of truth for operational knowledge. Knowledge Studio
+creates, changes, archives, searches, and reads records through the backend API and
+PostgreSQL repositories. A running application never loads its catalogue from YAML.
+
+YAML remains a portable representation reserved for future import, export, backup,
+reference catalogues, and catalogue exchange. Import and export must be behind
+dedicated abstractions so parsing and file formats never leak into domain rules or
+estimate workflows.
+
 ---
 
 # Knowledge Hierarchy
@@ -590,6 +601,11 @@ Status
 Change History
 
 Backward compatibility should be maintained whenever possible.
+
+In the Knowledge Studio MVP, `Version` is an optimistic-concurrency token and
+`CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy`, and `Status` are persisted for
+categories, works, materials, and units. A complete immutable revision history is a
+future capability; it must use stable identifiers and an explicit approval flow.
 
 ---
 

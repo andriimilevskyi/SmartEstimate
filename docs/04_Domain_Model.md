@@ -194,6 +194,11 @@ Main Entities
 - Difficulty
 - ConsumptionRule
 
+Knowledge is managed as a dedicated bounded context. Its operational records are
+persisted in PostgreSQL, while YAML is an interchange format only. The context
+exposes repository abstractions to Application use cases; neither Estimate nor AI
+integrations access storage directly.
+
 ---
 
 ## Pricing
@@ -218,6 +223,11 @@ Responsible for material calculations.
 Main Entities
 
 - Material
+
+For the Knowledge Studio MVP, Category, ConstructionWork, Material, and Unit carry
+`Id`, `Version`, `CreatedAt`, `UpdatedAt`, `CreatedBy`, `UpdatedBy`, and `Status`.
+Status is Draft, Active, or Archived. Archived records are soft-deleted and remain
+recoverable. Only Active works, materials, and units are selectable in estimates.
 - MaterialCategory
 - MaterialConsumption
 - Supplier

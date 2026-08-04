@@ -520,6 +520,15 @@ Administration
 
 Settings
 
+Knowledge Studio exposes versioned CRUD endpoints for categories, construction
+works, materials, and units. Collection endpoints support `page`, `pageSize`,
+`search`, `sort`, and documented filters such as `status` and `categoryId` where
+applicable. Delete semantics are represented by Archive and produce a soft-deleted
+Archived record; physical deletion is not exposed.
+
+Future Knowledge Import and Export endpoints must be separate workflows. They
+exchange YAML but do not change PostgreSQL's role as the source of truth.
+
 Future
 
 Notifications

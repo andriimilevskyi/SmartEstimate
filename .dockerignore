@@ -1,0 +1,32 @@
+# Version control and local tooling
+.git/
+.github/
+.agents/
+.codex/
+.vs/
+.vscode/
+.idea/
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+secrets/
+*.pfx
+*.p12
+*.pem
+*.key
+
+# Generated artifacts
+**/bin/
+**/obj/
+**/node_modules/
+frontend/dist/
+TestResults/
+coverage/
+logs/
+tmp/
+*.log
+
+# Non-container inputs
+.DS_Store

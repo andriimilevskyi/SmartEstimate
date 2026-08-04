@@ -1,0 +1,91 @@
+{
+  "estimateEditor": {
+    "catalog": {
+      "addItem": "Add to estimate",
+      "allCategories": "All categories",
+      "category": "Category",
+      "constructionWork": "Construction work",
+      "description": "Choose an approved construction work or material to add.",
+      "errorDescription": "Check your connection and try again.",
+      "errorTitle": "Catalog is unavailable",
+      "itemType": "Catalog item type",
+      "loading": "Loading catalog...",
+      "material": "Material",
+      "retry": "Try again",
+      "selectItem": "Select an item",
+      "title": "Knowledge explorer",
+      "unit": "Measurement unit",
+      "unitHelp": "The unit is taken from the selected catalog item.",
+      "unitPlaceholder": "Select a catalog item",
+      "work": "Work"
+    }
+  },
+  "knowledgeStudio": {
+    "actions": {
+      "archive": "Archive",
+      "cancel": "Cancel",
+      "new": "New record",
+      "next": "Next page",
+      "previous": "Previous page",
+      "save": "Save"
+    },
+    "ai": { "comingSoon": "Fill with AI — Sprint 5" },
+    "card": { "createdAt": "Created", "id": "ID", "updatedAt": "Updated", "version": "Version" },
+    "description": "Manage construction knowledge without editing YAML files.",
+    "empty": {
+      "description": "Create the first record for this section.",
+      "title": "No records yet"
+    },
+    "error": "Knowledge Studio data could not be loaded.",
+    "filters": {
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "category": "Category",
+      "search": "Search",
+      "sort": "Sort",
+      "status": "Status"
+    },
+    "form": {
+      "category": "Category",
+      "createTitle": "Create: {{resource}}",
+      "description": "Ukrainian name is required. English and German have an explicit fallback.",
+      "descriptionLabel": "Description",
+      "editTitle": "Edit record",
+      "nameDe": "German name",
+      "nameEn": "English name",
+      "nameUk": "Ukrainian name",
+      "none": "None",
+      "parentCategory": "Parent category",
+      "selectCategory": "Select a category",
+      "selectUnit": "Select a unit",
+      "status": "Status",
+      "symbol": "Symbol",
+      "tags": "Tags",
+      "tagsPlaceholder": "separated by commas",
+      "unit": "Measurement unit"
+    },
+    "loading": "Loading Knowledge Studio…",
+    "messages": {
+      "archiveError": "The record could not be archived.",
+      "archived": "The record was archived.",
+      "saveError": "The record could not be saved.",
+      "saved": "The record was saved."
+    },
+    "pagination": "Page {{page}} of {{total}}",
+    "resourceTabs": "Knowledge Studio sections",
+    "resources": {
+      "categories": "Categories",
+      "materials": "Materials",
+      "units": "Units",
+      "works": "Construction Works"
+    },
+    "sort": {
+      "name": "Name: A–Z",
+      "nameDescending": "Name: Z–A",
+      "newest": "Newest first",
+      "oldest": "Oldest first"
+    },
+    "status": { "active": "Active", "archived": "Archived", "draft": "Draft" },
+    "title": "Knowledge Studio"
+  }
+}

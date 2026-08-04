@@ -1,0 +1,96 @@
+{
+  "estimateEditor": {
+    "catalog": {
+      "addItem": "Zum Kostenvoranschlag hinzufügen",
+      "allCategories": "Alle Kategorien",
+      "category": "Kategorie",
+      "constructionWork": "Bauarbeit",
+      "description": "Wählen Sie eine freigegebene Bauarbeit oder ein Material zum Hinzufügen aus.",
+      "errorDescription": "Prüfen Sie die Verbindung und versuchen Sie es erneut.",
+      "errorTitle": "Katalog ist nicht verfügbar",
+      "itemType": "Katalogpositionstyp",
+      "loading": "Katalog wird geladen...",
+      "material": "Material",
+      "retry": "Erneut versuchen",
+      "selectItem": "Position auswählen",
+      "title": "Wissensexplorer",
+      "unit": "Maßeinheit",
+      "unitHelp": "Die Einheit wird aus der ausgewählten Katalogposition übernommen.",
+      "unitPlaceholder": "Katalogposition auswählen",
+      "work": "Arbeit"
+    }
+  },
+  "knowledgeStudio": {
+    "actions": {
+      "archive": "Archivieren",
+      "cancel": "Abbrechen",
+      "new": "Neuer Eintrag",
+      "next": "Nächste Seite",
+      "previous": "Vorherige Seite",
+      "save": "Speichern"
+    },
+    "ai": { "comingSoon": "Mit KI ausfüllen — Sprint 5" },
+    "card": {
+      "createdAt": "Erstellt",
+      "id": "ID",
+      "updatedAt": "Aktualisiert",
+      "version": "Version"
+    },
+    "description": "Verwalten Sie Bauwissen ohne YAML-Dateien zu bearbeiten.",
+    "empty": {
+      "description": "Erstellen Sie den ersten Eintrag für diesen Bereich.",
+      "title": "Noch keine Einträge"
+    },
+    "error": "Knowledge-Studio-Daten konnten nicht geladen werden.",
+    "filters": {
+      "allCategories": "Alle Kategorien",
+      "allStatuses": "Alle Status",
+      "category": "Kategorie",
+      "search": "Suche",
+      "sort": "Sortierung",
+      "status": "Status"
+    },
+    "form": {
+      "category": "Kategorie",
+      "createTitle": "Erstellen: {{resource}}",
+      "description": "Der ukrainische Name ist erforderlich. Für Englisch und Deutsch gibt es einen definierten Fallback.",
+      "descriptionLabel": "Beschreibung",
+      "editTitle": "Eintrag bearbeiten",
+      "nameDe": "Deutscher Name",
+      "nameEn": "Englischer Name",
+      "nameUk": "Ukrainischer Name",
+      "none": "Keine",
+      "parentCategory": "Übergeordnete Kategorie",
+      "selectCategory": "Kategorie auswählen",
+      "selectUnit": "Einheit auswählen",
+      "status": "Status",
+      "symbol": "Symbol",
+      "tags": "Tags",
+      "tagsPlaceholder": "durch Kommas getrennt",
+      "unit": "Maßeinheit"
+    },
+    "loading": "Knowledge Studio wird geladen…",
+    "messages": {
+      "archiveError": "Der Eintrag konnte nicht archiviert werden.",
+      "archived": "Der Eintrag wurde archiviert.",
+      "saveError": "Der Eintrag konnte nicht gespeichert werden.",
+      "saved": "Der Eintrag wurde gespeichert."
+    },
+    "pagination": "Seite {{page}} von {{total}}",
+    "resourceTabs": "Bereiche von Knowledge Studio",
+    "resources": {
+      "categories": "Kategorien",
+      "materials": "Materialien",
+      "units": "Einheiten",
+      "works": "Bauarbeiten"
+    },
+    "sort": {
+      "name": "Name: A–Z",
+      "nameDescending": "Name: Z–A",
+      "newest": "Neueste zuerst",
+      "oldest": "Älteste zuerst"
+    },
+    "status": { "active": "Aktiv", "archived": "Archiviert", "draft": "Entwurf" },
+    "title": "Knowledge Studio"
+  }
+}

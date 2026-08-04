@@ -174,9 +174,21 @@ Recommendations
 
 Construction Stages
 
+Knowledge Studio
+
+PostgreSQL Knowledge Store
+
+Archive workflow
+
+Future Import/Export abstractions
+
 Definition of Done
 
 Construction knowledge becomes reusable and independent from business logic.
+
+Operational knowledge is administered through the application and PostgreSQL is its
+single source of truth. YAML is retained only as a portable interchange and backup
+format.
 
 ---
 

@@ -1,0 +1,15 @@
+{
+  "navigation": {
+    "aiAssistant": "AI-помічник",
+    "customers": "Клієнти",
+    "dashboard": "Огляд",
+    "estimates": "Кошториси",
+    "knowledge": "База знань",
+    "knowledgeStudio": "Knowledge Studio",
+    "materials": "Матеріали",
+    "pricing": "Ціноутворення",
+    "projects": "Проєкти",
+    "reports": "Звіти",
+    "settings": "Налаштування"
+  }
+}

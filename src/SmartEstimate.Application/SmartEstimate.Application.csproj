@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
+    <PackageReference Include="Mapster" Version="7.4.0" />
+    <PackageReference Include="Mapster.DependencyInjection" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../SmartEstimate.Contracts/SmartEstimate.Contracts.csproj" />
+    <ProjectReference Include="../SmartEstimate.Domain/SmartEstimate.Domain.csproj" />
+    <ProjectReference Include="../SmartEstimate.Shared/SmartEstimate.Shared.csproj" />
+  </ItemGroup>
+</Project>

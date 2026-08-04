@@ -1,0 +1,12 @@
+id: putty
+
+name:
+  uk: Шпаклівка
+  en: Putty
+  de: Spachtelmasse
+
+description: Finishing putty for levelling wall surfaces.
+
+category: walls
+
+unit: kg

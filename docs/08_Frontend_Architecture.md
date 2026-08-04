@@ -229,6 +229,18 @@ Project History
 
 Search
 
+### Knowledge Studio
+
+Knowledge Studio is the administrative workspace for Categories, Construction
+Works, Materials, and Units. It reads and writes exclusively through the versioned
+SmartEstimate REST API. It provides searchable, sortable, filterable, paged lists
+and detail/create/edit views. Archive is a recoverable status action. The workspace
+does not read or edit YAML files in the browser.
+
+Construction Work detail views reserve a disabled “Fill with AI” action for the
+future AI Knowledge Assistant. It must not invoke AI or generate content until that
+capability is implemented.
+
 Filtering
 
 Attachments
