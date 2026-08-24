@@ -12,14 +12,19 @@ using SmartEstimate.Application.Estimates.DuplicateEstimateMaterialItem;
 using SmartEstimate.Application.Estimates.DuplicateEstimateWorkItem;
 using SmartEstimate.Application.Estimates.GetEstimateById;
 using SmartEstimate.Application.Estimates.GetEstimates;
+using SmartEstimate.Application.Estimates.PermanentDeleteEstimate;
 using SmartEstimate.Application.Estimates.RemoveEstimateMaterialItem;
 using SmartEstimate.Application.Estimates.RemoveEstimateZone;
 using SmartEstimate.Application.Estimates.RemoveEstimateWorkItem;
 using SmartEstimate.Application.Estimates.ReorderEstimateZones;
 using SmartEstimate.Application.Estimates.UpdateEstimateZone;
 using SmartEstimate.Application.Estimates.UpdateEstimateMaterialItem;
+using SmartEstimate.Application.Estimates.UpdateEstimateStatus;
 using SmartEstimate.Application.Estimates.UpdateEstimateWorkItem;
+using SmartEstimate.Application.Business;
 using SmartEstimate.Application.Knowledge;
+using SmartEstimate.Application.Pricing;
+using SmartEstimate.Application.Pricing.Abstractions;
 
 namespace SmartEstimate.Application;
 
@@ -40,6 +45,7 @@ public static class DependencyInjection
         services.AddScoped<GetEstimatesHandler>();
         services.AddScoped<GetEstimateByIdHandler>();
         services.AddScoped<DeleteEstimateHandler>();
+        services.AddScoped<PermanentDeleteEstimateHandler>();
         services.AddScoped<AddEstimateZoneHandler>();
         services.AddScoped<UpdateEstimateZoneHandler>();
         services.AddScoped<ReorderEstimateZonesHandler>();
@@ -52,7 +58,12 @@ public static class DependencyInjection
         services.AddScoped<UpdateEstimateMaterialItemHandler>();
         services.AddScoped<RemoveEstimateMaterialItemHandler>();
         services.AddScoped<DuplicateEstimateMaterialItemHandler>();
+        services.AddScoped<UpdateEstimateStatusHandler>();
+        services.AddScoped<EstimateResponseFactory>();
+        services.AddScoped<BusinessManagementService>();
         services.AddScoped<KnowledgeManagementService>();
+        services.AddScoped<PricingManagementService>();
+        services.AddScoped<IPriceResolver, PriceResolver>();
 
         return services;
     }

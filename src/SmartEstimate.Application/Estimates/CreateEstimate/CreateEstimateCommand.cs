@@ -1,5 +1,3 @@
-using SmartEstimate.Domain.Estimates;
-
 namespace SmartEstimate.Application.Estimates.CreateEstimate;
 
 /// <summary>
@@ -7,10 +5,8 @@ namespace SmartEstimate.Application.Estimates.CreateEstimate;
 /// </summary>
 public sealed record CreateEstimateCommand(
     string EstimateNumber,
+    Guid ObjectId,
     string Currency,
-    EstimateObjectType ObjectType,
-    string? ObjectAddress,
-    decimal? TotalArea,
     string? Notes,
     IReadOnlyCollection<string> Zones,
     IReadOnlyCollection<CreateEstimateLineItemCommand>? WorkItems,

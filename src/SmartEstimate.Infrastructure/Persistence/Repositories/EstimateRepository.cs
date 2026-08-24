@@ -31,20 +31,76 @@ public sealed class EstimateRepository(SmartEstimateDbContext dbContext) : IEsti
             .Include(estimate => estimate.MaterialItems)
             .SingleOrDefaultAsync(estimate => estimate.Id == id, cancellationToken);
 
-    public async Task<EstimatePage> GetPageAsync(int page, int pageSize, CancellationToken cancellationToken)
+    public Task<Estimate?> GetByIdIncludingDeletedAsync(Guid id, CancellationToken cancellationToken) =>
+        dbContext.Estimates
+            .IgnoreQueryFilters()
+            .Include(estimate => estimate.Zones)
+            .Include(estimate => estimate.WorkItems)
+            .Include(estimate => estimate.MaterialItems)
+            .SingleOrDefaultAsync(estimate => estimate.Id == id, cancellationToken);
+
+    public async Task<EstimatePage> GetPageAsync(EstimateListQuery query, CancellationToken cancellationToken)
     {
-        var query = dbContext.Estimates
-            .AsNoTracking()
+        var source = dbContext.Estimates.AsNoTracking();
+
+        if (query.ObjectId is { } objectId)
+        {
+            source = source.Where(estimate => estimate.ObjectId == objectId);
+        }
+
+        if (query.CustomerId is { } customerId)
+        {
+            source =
+                from estimate in source
+                join estimateObject in dbContext.EstimateObjects.IgnoreQueryFilters().AsNoTracking() on estimate.ObjectId equals estimateObject.Id
+                where estimateObject.CustomerId == customerId
+                select estimate;
+        }
+
+        if (query.Status is { } status)
+        {
+            source = source.Where(estimate => estimate.Status == status);
+        }
+
+        if (!string.IsNullOrWhiteSpace(query.Search))
+        {
+            var term = $"%{query.Search.Trim()}%";
+            source =
+                from estimate in source
+                join estimateObject in dbContext.EstimateObjects.IgnoreQueryFilters().AsNoTracking() on estimate.ObjectId equals estimateObject.Id
+                join customer in dbContext.Customers.IgnoreQueryFilters().AsNoTracking() on estimateObject.CustomerId equals customer.Id
+                where EF.Functions.ILike(estimateObject.Name, term)
+                    || (estimateObject.Address != null && EF.Functions.ILike(estimateObject.Address, term))
+                    || EF.Functions.ILike(customer.Name, term)
+                    || (customer.Phone != null && EF.Functions.ILike(customer.Phone, term))
+                    || (customer.Email != null && EF.Functions.ILike(customer.Email, term))
+                select estimate;
+        }
+
+        source = source
             .OrderByDescending(estimate => estimate.CreatedAt)
             .ThenByDescending(estimate => estimate.Id);
 
-        var totalCount = await query.CountAsync(cancellationToken);
-        var items = await query
-            .Skip((page - 1) * pageSize)
-            .Take(pageSize)
+        var totalCount = await source.CountAsync(cancellationToken);
+        var items = await source
+            .Skip((query.Page - 1) * query.PageSize)
+            .Take(query.PageSize)
             .ToArrayAsync(cancellationToken);
 
         return new EstimatePage(items, totalCount);
+    }
+
+    public Task<bool> ExistsForObjectAsync(Guid objectId, CancellationToken cancellationToken) =>
+        dbContext.Estimates
+            .IgnoreQueryFilters()
+            .AnyAsync(estimate => estimate.ObjectId == objectId, cancellationToken);
+
+    public Task RemoveAsync(Estimate estimate, CancellationToken cancellationToken)
+    {
+        ArgumentNullException.ThrowIfNull(estimate);
+
+        dbContext.Estimates.Remove(estimate);
+        return Task.CompletedTask;
     }
 
     public async Task SaveChangesAsync(CancellationToken cancellationToken)

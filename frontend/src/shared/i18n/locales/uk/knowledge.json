@@ -30,7 +30,16 @@
       "save": "Зберегти"
     },
     "ai": { "comingSoon": "Заповнити з AI — Sprint 5" },
-    "card": { "createdAt": "Створено", "id": "ID", "updatedAt": "Оновлено", "version": "Версія" },
+    "card": {
+      "createdAt": "Створено",
+      "id": "ID",
+      "noCategory": "Без категорії",
+      "noUnit": "Без одиниці",
+      "parentCategory": "Батьківська категорія: {{category}}",
+      "rootCategory": "Коренева категорія",
+      "updatedAt": "Оновлено",
+      "version": "Версія"
+    },
     "description": "Керуйте будівельними знаннями без редагування YAML-файлів.",
     "empty": {
       "description": "Створіть першу позицію для цього розділу.",
@@ -87,5 +96,48 @@
     },
     "status": { "active": "Активна", "archived": "Архівна", "draft": "Чернетка" },
     "title": "Knowledge Studio"
+  },
+  "materials": {
+    "actions": {
+      "manageKnowledge": "Керувати у Knowledge Studio"
+    },
+    "catalog": {
+      "category": "Категорія",
+      "count_few": "{{count}} матеріали",
+      "count_many": "{{count}} матеріалів",
+      "count_one": "{{count}} матеріал",
+      "count_other": "{{count}} матеріали",
+      "noCategory": "Без категорії",
+      "noDescription": "Опис не заповнено",
+      "title": "Каталог матеріалів",
+      "unit": "Одиниця вимірювання",
+      "unitUnknown": "Одиниця не знайдена",
+      "updatedAt": "Оновлено"
+    },
+    "description": "Щоденний робочий каталог матеріалів з існуючої бази KnowledgeMaterials.",
+    "eyebrow": "Каталог",
+    "filters": {
+      "allCategories": "Усі категорії",
+      "allStatuses": "Усі статуси",
+      "category": "Категорія",
+      "search": "Пошук матеріалу",
+      "sort": "Сортування",
+      "status": "Статус"
+    },
+    "pagination": "Сторінка {{page}} з {{total}}",
+    "states": {
+      "emptyDescription": "Змініть пошук або фільтри, щоб знайти потрібний матеріал.",
+      "emptyTitle": "Матеріали не знайдено",
+      "error": "Каталог матеріалів зараз недоступний.",
+      "loading": "Завантаження матеріалів...",
+      "selectMaterial": "Оберіть матеріал у списку для швидкого перегляду."
+    },
+    "title": "Матеріали",
+    "use": {
+      "createEstimate": "Створити кошторис",
+      "description": "Відкрийте потрібний кошторис. Матеріал буде підставлений у форму додавання матеріалу, а ціну ви введете вручну.",
+      "loading": "Завантаження кошторисів...",
+      "title": "Використати в кошторисі"
+    }
   }
 }

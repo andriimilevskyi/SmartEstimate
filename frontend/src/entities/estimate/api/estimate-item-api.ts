@@ -21,14 +21,14 @@ export function addEstimateItem(
           constructionWorkId: payload.knowledgeItemId,
           notes: payload.notes,
           quantity: payload.quantity,
-          unitPrice: payload.unitPrice,
+          unitPrice: payload.unitPrice ?? null,
           zoneId: payload.zoneId,
         }
       : {
           materialId: payload.knowledgeItemId,
           notes: payload.notes,
           quantity: payload.quantity,
-          unitPrice: payload.unitPrice,
+          unitPrice: payload.unitPrice ?? null,
           zoneId: payload.zoneId,
         };
 

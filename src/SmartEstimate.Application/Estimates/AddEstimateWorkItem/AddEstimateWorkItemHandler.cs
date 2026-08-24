@@ -1,8 +1,10 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
 using SmartEstimate.Application.Knowledge.Abstractions;
+using SmartEstimate.Application.Pricing.Abstractions;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Domain.Estimates.ValueObjects;
+using SmartEstimate.Domain.Pricing;
 using SmartEstimate.Shared.Primitives;
 
 namespace SmartEstimate.Application.Estimates.AddEstimateWorkItem;
@@ -14,12 +16,14 @@ public sealed class AddEstimateWorkItemHandler(
     IEstimateRepository repository,
     IConstructionWorkRepository constructionWorks,
     IUnitRepository units,
+    IPriceResolver priceResolver,
     IValidator<AddEstimateWorkItemCommand> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         AddEstimateWorkItemCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         ArgumentNullException.ThrowIfNull(command);
 
@@ -58,18 +62,36 @@ public sealed class AddEstimateWorkItemHandler(
             return Result<EstimateDetailsResponse>.Failure(EstimateErrors.UnitNotFound(constructionWork.UnitId.ToString()));
         }
 
+        var capturedAt = DateTimeOffset.UtcNow;
+        var resolvedPrice = command.UnitPrice.HasValue
+            ? null
+            : await priceResolver.GetCurrentPriceAsync(
+                new PriceTarget(PriceTargetType.ConstructionWork, constructionWork.Id),
+                estimate.Currency,
+                null,
+                null,
+                null,
+                capturedAt,
+                cancellationToken);
+        var unitPrice = command.UnitPrice ?? resolvedPrice?.Amount ?? decimal.Zero;
+
         estimate.AddWorkItem(
             constructionWork.Name.Uk,
             new Quantity(command.Quantity),
             new MeasurementUnit(unit.Symbol),
-            new Money(command.UnitPrice, estimate.Currency),
+            new Money(unitPrice, estimate.Currency),
             command.Notes,
-            DateTimeOffset.UtcNow,
+            capturedAt,
             constructionWork.Id.ToString(),
-            command.ZoneId);
+            command.ZoneId,
+            resolvedPrice?.PriceId,
+            resolvedPrice is null ? null : capturedAt,
+            command.UnitPrice.HasValue,
+            new LocalizedNameSnapshot(constructionWork.Name.Uk, constructionWork.Name.En, constructionWork.Name.De),
+            EstimateItemNameSource.KnowledgeSnapshot);
 
         await repository.SaveChangesAsync(cancellationToken);
 
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

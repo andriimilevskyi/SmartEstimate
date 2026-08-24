@@ -1,7 +1,7 @@
-namespace SmartEstimate.Domain.Estimates;
+namespace SmartEstimate.Domain.Objects;
 
 /// <summary>
-/// Type of construction object described by an estimate.
+/// Type of construction object estimated by SmartEstimate.
 /// </summary>
 public enum EstimateObjectType
 {

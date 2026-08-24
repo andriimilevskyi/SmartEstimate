@@ -22,6 +22,57 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("SmartEstimate.Domain.Customers.Customer", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("Note")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<string>("Phone")
+                        .HasMaxLength(64)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_Customers_Name");
+
+                    b.HasIndex("Phone")
+                        .HasDatabaseName("IX_Customers_Phone");
+
+                    b.ToTable("Customers", (string)null);
+                });
+
             modelBuilder.Entity("SmartEstimate.Domain.Estimates.Estimate", b =>
                 {
                     b.Property<Guid>("Id")
@@ -59,18 +110,13 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasColumnType("character varying(64)")
                         .HasColumnName("EstimateNumber");
 
-                    b.Property<string>("ObjectAddress")
-                        .HasMaxLength(512)
-                        .HasColumnType("character varying(512)");
+                    b.Property<Guid>("ObjectId")
+                        .HasColumnType("uuid");
 
-                    b.Property<string>("ObjectType")
+                    b.Property<string>("Status")
                         .IsRequired()
                         .HasMaxLength(32)
                         .HasColumnType("character varying(32)");
-
-                    b.Property<decimal?>("TotalArea")
-                        .HasPrecision(18, 2)
-                        .HasColumnType("numeric(18,2)");
 
                     b.Property<decimal>("TotalLaborAmount")
                         .HasPrecision(18, 2)
@@ -99,6 +145,12 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasDatabaseName("IX_Estimates_EstimateNumber_Active")
                         .HasFilter("\"IsDeleted\" = false");
 
+                    b.HasIndex("ObjectId")
+                        .HasDatabaseName("IX_Estimates_ObjectId");
+
+                    b.HasIndex("Status")
+                        .HasDatabaseName("IX_Estimates_Status");
+
                     b.ToTable("Estimates", (string)null);
                 });
 
@@ -112,6 +164,11 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
 
                     b.Property<Guid>("EstimateId")
                         .HasColumnType("uuid");
+
+                    b.Property<bool>("IsUnitPriceManuallyOverridden")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("KnowledgeItemId")
                         .HasMaxLength(128)
@@ -127,13 +184,26 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<string>("NameSource")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("Legacy");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<DateTimeOffset?>("PriceCapturedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<decimal>("Quantity")
                         .HasPrecision(18, 3)
                         .HasColumnType("numeric(18,3)");
+
+                    b.Property<Guid?>("SourcePriceId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -163,6 +233,11 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                     b.Property<Guid>("EstimateId")
                         .HasColumnType("uuid");
 
+                    b.Property<bool>("IsUnitPriceManuallyOverridden")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
                     b.Property<string>("KnowledgeItemId")
                         .HasMaxLength(128)
                         .HasColumnType("character varying(128)");
@@ -177,13 +252,26 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
+                    b.Property<string>("NameSource")
+                        .IsRequired()
+                        .ValueGeneratedOnAdd()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)")
+                        .HasDefaultValue("Legacy");
+
                     b.Property<string>("Notes")
                         .HasMaxLength(2000)
                         .HasColumnType("character varying(2000)");
 
+                    b.Property<DateTimeOffset?>("PriceCapturedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.Property<decimal>("Quantity")
                         .HasPrecision(18, 3)
                         .HasColumnType("numeric(18,3)");
+
+                    b.Property<Guid?>("SourcePriceId")
+                        .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("UpdatedAt")
                         .HasColumnType("timestamp with time zone");
@@ -423,6 +511,269 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                     b.ToTable("MeasurementUnits", (string)null);
                 });
 
+            modelBuilder.Entity("SmartEstimate.Domain.Objects.EstimateObject", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Address")
+                        .HasMaxLength(512)
+                        .HasColumnType("character varying(512)");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset?>("DeletedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(2000)
+                        .HasColumnType("character varying(2000)");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("ObjectType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<decimal?>("TotalArea")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Address")
+                        .HasDatabaseName("IX_EstimateObjects_Address");
+
+                    b.HasIndex("CustomerId")
+                        .HasDatabaseName("IX_EstimateObjects_CustomerId");
+
+                    b.HasIndex("Name")
+                        .HasDatabaseName("IX_EstimateObjects_Name");
+
+                    b.HasIndex("ObjectType")
+                        .HasDatabaseName("IX_EstimateObjects_ObjectType");
+
+                    b.ToTable("EstimateObjects", (string)null);
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Pricing.CatalogPrice", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<DateTimeOffset?>("ArchivedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ConstructionWorkId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTimeOffset>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("CreatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<DateTimeOffset>("EffectiveFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EffectiveUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("KnowledgeMaterialId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("RegionCode")
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SourceType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SupplierName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("UpdatedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Version")
+                        .IsConcurrencyToken()
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ConstructionWorkId");
+
+                    b.HasIndex("KnowledgeMaterialId");
+
+                    b.HasIndex("RegionCode")
+                        .HasDatabaseName("IX_CatalogPrices_RegionCode");
+
+                    b.HasIndex("SupplierName")
+                        .HasDatabaseName("IX_CatalogPrices_SupplierName");
+
+                    b.HasIndex("TargetType", "ConstructionWorkId", "Currency", "Status", "EffectiveFrom")
+                        .HasDatabaseName("IX_CatalogPrices_Work_Current");
+
+                    b.HasIndex("TargetType", "KnowledgeMaterialId", "Currency", "Status", "EffectiveFrom")
+                        .HasDatabaseName("IX_CatalogPrices_Material_Current");
+
+                    b.ToTable("CatalogPrices", null, t =>
+                        {
+                            t.HasCheckConstraint("CK_CatalogPrices_EffectiveRange", "\"EffectiveUntil\" IS NULL OR \"EffectiveUntil\" > \"EffectiveFrom\"");
+
+                            t.HasCheckConstraint("CK_CatalogPrices_Target", "(\"TargetType\" = 'Material' AND \"KnowledgeMaterialId\" IS NOT NULL AND \"ConstructionWorkId\" IS NULL)\nOR (\"TargetType\" = 'ConstructionWork' AND \"ConstructionWorkId\" IS NOT NULL AND \"KnowledgeMaterialId\" IS NULL)");
+                        });
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Pricing.CatalogPriceHistoryEntry", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<decimal>("Amount")
+                        .HasPrecision(18, 2)
+                        .HasColumnType("numeric(18,2)");
+
+                    b.Property<Guid>("CatalogPriceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("ChangeType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<DateTimeOffset>("ChangedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("ChangedBy")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid?>("ConstructionWorkId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Currency")
+                        .IsRequired()
+                        .HasMaxLength(3)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(3)");
+
+                    b.Property<DateTimeOffset>("EffectiveFrom")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTimeOffset?>("EffectiveUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid?>("KnowledgeMaterialId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Notes")
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<string>("PriceStatus")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("RegionCode")
+                        .HasMaxLength(64)
+                        .IsUnicode(false)
+                        .HasColumnType("character varying(64)");
+
+                    b.Property<string>("SourceType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.Property<Guid?>("SupplierId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("SupplierName")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
+
+                    b.Property<string>("TargetType")
+                        .IsRequired()
+                        .HasMaxLength(32)
+                        .HasColumnType("character varying(32)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CatalogPriceId")
+                        .HasDatabaseName("IX_CatalogPriceHistory_CatalogPriceId");
+
+                    b.HasIndex("TargetType", "ConstructionWorkId", "ChangedAt")
+                        .HasDatabaseName("IX_CatalogPriceHistory_Work");
+
+                    b.HasIndex("TargetType", "KnowledgeMaterialId", "ChangedAt")
+                        .HasDatabaseName("IX_CatalogPriceHistory_Material");
+
+                    b.ToTable("CatalogPriceHistory", (string)null);
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Estimates.Estimate", b =>
+                {
+                    b.HasOne("SmartEstimate.Domain.Objects.EstimateObject", null)
+                        .WithMany()
+                        .HasForeignKey("ObjectId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("SmartEstimate.Domain.Estimates.EstimateMaterialItem", b =>
                 {
                     b.HasOne("SmartEstimate.Domain.Estimates.Estimate", null)
@@ -436,6 +787,37 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("SmartEstimate.Domain.Estimates.LocalizedNameSnapshot", "NameSnapshot", b1 =>
+                        {
+                            b1.Property<Guid>("EstimateMaterialItemId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("De")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotDe");
+
+                            b1.Property<string>("En")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotEn");
+
+                            b1.Property<string>("Uk")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotUk");
+
+                            b1.HasKey("EstimateMaterialItemId");
+
+                            b1.ToTable("EstimateMaterialItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EstimateMaterialItemId");
+                        });
 
                     b.OwnsOne("SmartEstimate.Domain.Estimates.ValueObjects.Money", "UnitPrice", b1 =>
                         {
@@ -462,6 +844,8 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                                 .HasForeignKey("EstimateMaterialItemId");
                         });
 
+                    b.Navigation("NameSnapshot");
+
                     b.Navigation("UnitPrice")
                         .IsRequired();
                 });
@@ -479,6 +863,37 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         .HasForeignKey("ZoneId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.OwnsOne("SmartEstimate.Domain.Estimates.LocalizedNameSnapshot", "NameSnapshot", b1 =>
+                        {
+                            b1.Property<Guid>("EstimateWorkItemId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("De")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotDe");
+
+                            b1.Property<string>("En")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotEn");
+
+                            b1.Property<string>("Uk")
+                                .IsRequired()
+                                .HasMaxLength(256)
+                                .HasColumnType("character varying(256)")
+                                .HasColumnName("NameSnapshotUk");
+
+                            b1.HasKey("EstimateWorkItemId");
+
+                            b1.ToTable("EstimateWorkItems");
+
+                            b1.WithOwner()
+                                .HasForeignKey("EstimateWorkItemId");
+                        });
 
                     b.OwnsOne("SmartEstimate.Domain.Estimates.ValueObjects.Money", "UnitPrice", b1 =>
                         {
@@ -504,6 +919,8 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                             b1.WithOwner()
                                 .HasForeignKey("EstimateWorkItemId");
                         });
+
+                    b.Navigation("NameSnapshot");
 
                     b.Navigation("UnitPrice")
                         .IsRequired();
@@ -703,6 +1120,37 @@ namespace SmartEstimate.Infrastructure.Persistence.Migrations
                         });
 
                     b.Navigation("Name")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Objects.EstimateObject", b =>
+                {
+                    b.HasOne("SmartEstimate.Domain.Customers.Customer", null)
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Pricing.CatalogPrice", b =>
+                {
+                    b.HasOne("SmartEstimate.Domain.Knowledge.ConstructionWork", null)
+                        .WithMany()
+                        .HasForeignKey("ConstructionWorkId")
+                        .OnDelete(DeleteBehavior.Restrict);
+
+                    b.HasOne("SmartEstimate.Domain.Knowledge.KnowledgeMaterial", null)
+                        .WithMany()
+                        .HasForeignKey("KnowledgeMaterialId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("SmartEstimate.Domain.Pricing.CatalogPriceHistoryEntry", b =>
+                {
+                    b.HasOne("SmartEstimate.Domain.Pricing.CatalogPrice", null)
+                        .WithMany()
+                        .HasForeignKey("CatalogPriceId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 

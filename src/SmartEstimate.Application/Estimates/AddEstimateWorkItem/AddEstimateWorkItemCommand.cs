@@ -8,5 +8,5 @@ public sealed record AddEstimateWorkItemCommand(
     Guid ZoneId,
     string ConstructionWorkId,
     decimal Quantity,
-    decimal UnitPrice,
+    decimal? UnitPrice,
     string? Notes);

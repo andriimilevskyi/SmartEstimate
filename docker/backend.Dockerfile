@@ -18,8 +18,9 @@ FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS final
 WORKDIR /app
 
 # curl is used exclusively by the Compose readiness health check.
+# DejaVu fonts are used by the PDF document renderer in Linux containers.
 RUN apt-get update \
-    && apt-get install --no-install-recommends --yes curl \
+    && apt-get install --no-install-recommends --yes curl fonts-dejavu-core \
     && rm -rf /var/lib/apt/lists/*
 
 ENV ASPNETCORE_URLS=http://+:8080 \

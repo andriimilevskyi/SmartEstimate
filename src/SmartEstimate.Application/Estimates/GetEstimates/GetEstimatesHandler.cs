@@ -1,5 +1,4 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
 using SmartEstimate.Shared.Primitives;
 
@@ -11,7 +10,7 @@ namespace SmartEstimate.Application.Estimates.GetEstimates;
 public sealed class GetEstimatesHandler(
     IEstimateRepository repository,
     IValidator<GetEstimatesQuery> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<PagedEstimatesResponse>> HandleAsync(
         GetEstimatesQuery query,
@@ -25,8 +24,10 @@ public sealed class GetEstimatesHandler(
             return Result<PagedEstimatesResponse>.Failure(EstimateErrors.Validation(validationResult));
         }
 
-        var page = await repository.GetPageAsync(query.Page, query.PageSize, cancellationToken);
-        var items = mapper.Map<IReadOnlyCollection<EstimateSummaryResponse>>(page.Items);
+        var page = await repository.GetPageAsync(
+            new EstimateListQuery(query.Page, query.PageSize, query.Search, query.Status, query.CustomerId, query.ObjectId),
+            cancellationToken);
+        var items = await responseFactory.CreateSummariesAsync(page.Items, cancellationToken);
 
         return Result<PagedEstimatesResponse>.Success(new PagedEstimatesResponse(
             items,

@@ -33,6 +33,10 @@
     "card": {
       "createdAt": "Erstellt",
       "id": "ID",
+      "noCategory": "Keine Kategorie",
+      "noUnit": "Keine Einheit",
+      "parentCategory": "Übergeordnete Kategorie: {{category}}",
+      "rootCategory": "Stammkategorie",
       "updatedAt": "Aktualisiert",
       "version": "Version"
     },
@@ -92,5 +96,46 @@
     },
     "status": { "active": "Aktiv", "archived": "Archiviert", "draft": "Entwurf" },
     "title": "Knowledge Studio"
+  },
+  "materials": {
+    "actions": {
+      "manageKnowledge": "In Knowledge Studio verwalten"
+    },
+    "catalog": {
+      "category": "Kategorie",
+      "count_one": "{{count}} Material",
+      "count_other": "{{count}} Materialien",
+      "noCategory": "Keine Kategorie",
+      "noDescription": "Noch keine Beschreibung",
+      "title": "Materialkatalog",
+      "unit": "Maßeinheit",
+      "unitUnknown": "Einheit nicht gefunden",
+      "updatedAt": "Aktualisiert"
+    },
+    "description": "Ein täglicher Arbeitskatalog für Materialien aus der bestehenden KnowledgeMaterials-Basis.",
+    "eyebrow": "Katalog",
+    "filters": {
+      "allCategories": "Alle Kategorien",
+      "allStatuses": "Alle Status",
+      "category": "Kategorie",
+      "search": "Materialien suchen",
+      "sort": "Sortierung",
+      "status": "Status"
+    },
+    "pagination": "Seite {{page}} von {{total}}",
+    "states": {
+      "emptyDescription": "Ändern Sie Suche oder Filter, um das benötigte Material zu finden.",
+      "emptyTitle": "Keine Materialien gefunden",
+      "error": "Der Materialkatalog ist derzeit nicht verfügbar.",
+      "loading": "Materialien werden geladen...",
+      "selectMaterial": "Wählen Sie ein Material in der Liste für die Schnellansicht."
+    },
+    "title": "Materialien",
+    "use": {
+      "createEstimate": "Kostenvoranschlag erstellen",
+      "description": "Öffnen Sie den benötigten Kostenvoranschlag. Das Material wird im Formular zum Hinzufügen vorausgewählt, den Preis geben Sie manuell ein.",
+      "loading": "Kostenvoranschläge werden geladen...",
+      "title": "Im Kostenvoranschlag verwenden"
+    }
   }
 }

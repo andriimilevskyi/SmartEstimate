@@ -14,6 +14,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "i18n:check": "node scripts/validate-i18n.mjs",
+    "ux:check": "node scripts/check-delete-ux.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
   "dependencies": {

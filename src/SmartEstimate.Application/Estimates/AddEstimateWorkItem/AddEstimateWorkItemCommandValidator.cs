@@ -25,7 +25,8 @@ public sealed class AddEstimateWorkItemCommandValidator : AbstractValidator<AddE
 
         RuleFor(command => command.UnitPrice)
             .GreaterThanOrEqualTo(decimal.Zero)
-            .PrecisionScale(18, 2, false);
+            .PrecisionScale(18, 2, false)
+            .When(command => command.UnitPrice.HasValue);
 
         RuleFor(command => command.Notes)
             .MaximumLength(2_000)

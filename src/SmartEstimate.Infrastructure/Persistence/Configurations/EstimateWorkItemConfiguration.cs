@@ -28,6 +28,27 @@ public sealed class EstimateWorkItemConfiguration : IEntityTypeConfiguration<Est
             .HasMaxLength(256)
             .IsRequired();
 
+        builder.OwnsOne(item => item.NameSnapshot, snapshot =>
+        {
+            snapshot.Property(value => value.Uk)
+                .HasColumnName("NameSnapshotUk")
+                .HasMaxLength(256);
+
+            snapshot.Property(value => value.En)
+                .HasColumnName("NameSnapshotEn")
+                .HasMaxLength(256);
+
+            snapshot.Property(value => value.De)
+                .HasColumnName("NameSnapshotDe")
+                .HasMaxLength(256);
+        });
+
+        builder.Property(item => item.NameSource)
+            .HasConversion<string>()
+            .HasMaxLength(32)
+            .HasDefaultValue(EstimateItemNameSource.Legacy)
+            .IsRequired();
+
         builder.Property(item => item.Quantity)
             .HasConversion(
                 quantity => quantity.Value,
@@ -62,6 +83,14 @@ public sealed class EstimateWorkItemConfiguration : IEntityTypeConfiguration<Est
 
         builder.Property(item => item.KnowledgeItemId)
             .HasMaxLength(128);
+
+        builder.Property(item => item.SourcePriceId);
+
+        builder.Property(item => item.PriceCapturedAt);
+
+        builder.Property(item => item.IsUnitPriceManuallyOverridden)
+            .HasDefaultValue(false)
+            .IsRequired();
 
         builder.Property(item => item.CreatedAt)
             .IsRequired();

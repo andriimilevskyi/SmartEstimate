@@ -3,6 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 
 import { useEstimateQuery } from '@/entities/estimate/api/estimate-queries';
 import { DeleteEstimateButton } from '@/features/delete-estimate/ui/DeleteEstimateButton';
+import { PermanentDeleteEstimateButton } from '@/features/delete-estimate/ui/PermanentDeleteEstimateButton';
+import { EstimateDocumentsPanel } from '@/features/estimate-documents/ui/EstimateDocumentsPanel';
+import { useUpdateEstimateStatus } from '@/features/estimate-item-mutations/model/use-estimate-item-mutations';
 import { ApiClientError } from '@/shared/api/api-client';
 import { useTranslation } from '@/shared/i18n/use-translation';
 import { formatDate } from '@/shared/lib/formatters';
@@ -14,6 +17,7 @@ export function EstimateDetailsPage() {
   const navigate = useNavigate();
   const { estimateId } = useParams();
   const estimateQuery = useEstimateQuery(estimateId ?? '');
+  const statusMutation = useUpdateEstimateStatus(estimateId ?? '');
 
   if (!estimateId) {
     return null;
@@ -61,10 +65,10 @@ export function EstimateDetailsPage() {
 
   const estimate = estimateQuery.data;
   const formattedArea =
-    estimate.totalArea == null
+    estimate.object.totalArea == null
       ? null
       : t('estimateDetails.objectArea', {
-          area: new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(estimate.totalArea),
+          area: new Intl.NumberFormat(locale, { maximumFractionDigits: 2 }).format(estimate.object.totalArea),
         });
 
   return (
@@ -76,6 +80,18 @@ export function EstimateDetailsPage() {
         <ArrowLeft aria-hidden="true" className="size-4" />
         {t('estimateDetails.backToList')}
       </Link>
+
+      <nav aria-label={t('breadcrumbs.label')} className="flex flex-wrap gap-2 text-sm text-muted-foreground">
+        <Link className="hover:text-primary" to="/overview">
+          {t('navigation.dashboard')}
+        </Link>
+        <span>/</span>
+        <Link className="hover:text-primary" to="/estimates">
+          {t('navigation.estimates')}
+        </Link>
+        <span>/</span>
+        <span className="text-foreground">{estimate.estimateNumber}</span>
+      </nav>
 
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-start">
         <div className="space-y-2">
@@ -89,12 +105,21 @@ export function EstimateDetailsPage() {
           <div className="mt-3 flex flex-wrap gap-2 text-sm text-muted-foreground">
             <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1">
               <Building2 aria-hidden="true" className="size-4" />
-              {t(`estimates.objectTypes.${estimate.objectType}`)}
+              {t(`estimates.objectTypes.${estimate.object.objectType}`)}
             </span>
-            {estimate.objectAddress ? (
+            <Link
+              className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1 hover:text-primary"
+              to={`/objects/${estimate.object.id}`}
+            >
+              {estimate.object.name}
+            </Link>
+            <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1">
+              {estimate.object.customerName}
+            </span>
+            {estimate.object.address ? (
               <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1">
                 <MapPin aria-hidden="true" className="size-4" />
-                {estimate.objectAddress}
+                {estimate.object.address}
               </span>
             ) : null}
             {formattedArea ? (
@@ -103,10 +128,49 @@ export function EstimateDetailsPage() {
                 {formattedArea}
               </span>
             ) : null}
+            {estimate.isDeleted ? (
+              <span className="inline-flex items-center gap-2 rounded-full border border-border bg-card px-3 py-1">
+                {t('estimates.deletedState.badge')}
+              </span>
+            ) : null}
           </div>
         </div>
-        <DeleteEstimateButton estimateId={estimate.id} onDeleted={() => navigate('/estimates')} />
+        <div className="flex flex-wrap items-center gap-2">
+          {!estimate.isDeleted ? (
+            <>
+              <select
+                className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                disabled={statusMutation.isPending}
+                onChange={(event) => statusMutation.mutate(event.target.value as typeof estimate.status)}
+                value={estimate.status}
+              >
+                {(['Draft', 'InProgress', 'Sent', 'Approved', 'Completed', 'Archived'] as const).map(
+                  (status) => (
+                    <option key={status} value={status}>
+                      {t(`estimates.status.${status}`)}
+                    </option>
+                  ),
+                )}
+              </select>
+              <DeleteEstimateButton estimateId={estimate.id} />
+            </>
+          ) : (
+            <PermanentDeleteEstimateButton
+              estimateId={estimate.id}
+              onDeleted={() => navigate('/estimates')}
+            />
+          )}
+        </div>
       </div>
+
+      {estimate.isDeleted ? (
+        <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+          <h2 className="font-semibold">{t('estimates.deletedState.title')}</h2>
+          <p className="mt-2 text-sm leading-6 text-muted-foreground">
+            {t('estimates.deletedState.description')}
+          </p>
+        </section>
+      ) : null}
 
       {estimate.notes ? (
         <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
@@ -117,15 +181,19 @@ export function EstimateDetailsPage() {
         </section>
       ) : null}
 
-      <section aria-labelledby="estimate-editor-title" className="space-y-4">
-        <div>
-          <h2 className="text-xl font-semibold tracking-tight" id="estimate-editor-title">
-            {t('estimateEditor.title')}
-          </h2>
-          <p className="mt-1 text-sm text-muted-foreground">{t('estimateEditor.description')}</p>
-        </div>
-        <EstimateEditor estimate={estimate} />
-      </section>
+      {!estimate.isDeleted ? <EstimateDocumentsPanel estimate={estimate} /> : null}
+
+      {!estimate.isDeleted ? (
+        <section aria-labelledby="estimate-editor-title" className="space-y-4">
+          <div>
+            <h2 className="text-xl font-semibold tracking-tight" id="estimate-editor-title">
+              {t('estimateEditor.title')}
+            </h2>
+            <p className="mt-1 text-sm text-muted-foreground">{t('estimateEditor.description')}</p>
+          </div>
+          <EstimateEditor estimate={estimate} />
+        </section>
+      ) : null}
     </section>
   );
 }

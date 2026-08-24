@@ -13,22 +13,13 @@ public sealed class CreateEstimateCommandValidator : AbstractValidator<CreateEst
             .NotEmpty()
             .MaximumLength(64);
 
+        RuleFor(command => command.ObjectId)
+            .NotEmpty();
+
         RuleFor(command => command.Currency)
             .NotEmpty()
             .Length(3)
             .Matches("^[A-Za-z]{3}$");
-
-        RuleFor(command => command.ObjectType)
-            .IsInEnum();
-
-        RuleFor(command => command.ObjectAddress)
-            .MaximumLength(512)
-            .When(command => command.ObjectAddress is not null);
-
-        RuleFor(command => command.TotalArea)
-            .GreaterThan(decimal.Zero)
-            .PrecisionScale(18, 2, false)
-            .When(command => command.TotalArea is not null);
 
         RuleFor(command => command.Notes)
             .MaximumLength(2_000)

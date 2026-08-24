@@ -1,3 +1,5 @@
+using System.Text.Json.Serialization;
+
 namespace SmartEstimate.Application.Estimates;
 
 /// <summary>
@@ -7,9 +9,10 @@ public sealed record EstimateSummaryResponse(
     Guid Id,
     string EstimateNumber,
     string Currency,
-    string ObjectType,
-    string? ObjectAddress,
-    decimal? TotalArea,
+    string Status,
+    bool IsDeleted,
+    DateTimeOffset? DeletedAt,
+    [property: JsonPropertyName("object")] EstimateBusinessContextResponse BusinessContext,
     decimal TotalLabor,
     decimal TotalMaterials,
     decimal GrandTotal,
@@ -24,9 +27,10 @@ public sealed record EstimateDetailsResponse(
     Guid Id,
     string EstimateNumber,
     string Currency,
-    string ObjectType,
-    string? ObjectAddress,
-    decimal? TotalArea,
+    string Status,
+    bool IsDeleted,
+    DateTimeOffset? DeletedAt,
+    [property: JsonPropertyName("object")] EstimateBusinessContextResponse BusinessContext,
     string? Notes,
     decimal TotalLabor,
     decimal TotalMaterials,
@@ -61,7 +65,24 @@ public sealed record EstimateLineItemResponse(
     decimal UnitPrice,
     decimal Total,
     string? Notes,
-    string? KnowledgeItemId);
+    string? KnowledgeItemId,
+    string NameSource,
+    Guid? SourcePriceId,
+    DateTimeOffset? PriceCapturedAt,
+    bool IsUnitPriceManuallyOverridden);
+
+public sealed record EstimateBusinessContextResponse(
+    Guid Id,
+    string Name,
+    string ObjectType,
+    string? Address,
+    decimal? TotalArea,
+    string? Description,
+    Guid CustomerId,
+    string CustomerName,
+    string? CustomerPhone,
+    string? CustomerEmail,
+    string? CustomerNote);
 
 /// <summary>
 /// Pagination metadata and estimate summaries.

@@ -19,6 +19,7 @@
     <ProjectReference Include="../SmartEstimate.Contracts/SmartEstimate.Contracts.csproj" />
     <ProjectReference Include="../SmartEstimate.Infrastructure/SmartEstimate.Infrastructure.csproj" />
     <ProjectReference Include="../SmartEstimate.Shared/SmartEstimate.Shared.csproj" />
+    <ProjectReference Include="..\SmartEstimate.Documents\SmartEstimate.Documents.csproj" />
   </ItemGroup>
 
   <ItemGroup>

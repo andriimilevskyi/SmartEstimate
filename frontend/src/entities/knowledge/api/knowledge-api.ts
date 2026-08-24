@@ -80,6 +80,10 @@ export function getKnowledgeMaterials(
   );
 }
 
+export function getKnowledgeMaterial(id: string, signal?: AbortSignal) {
+  return apiRequest<KnowledgeMaterial>(`${knowledgePath}/materials/${id}`, { signal });
+}
+
 export function getKnowledgeUnits(signal?: AbortSignal, options?: KnowledgeQueryOptions) {
   return apiRequest<PagedKnowledgeResponse<KnowledgeUnit>>(getCatalogPath('units', options), {
     signal,

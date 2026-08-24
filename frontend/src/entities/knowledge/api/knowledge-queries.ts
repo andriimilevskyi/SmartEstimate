@@ -3,47 +3,72 @@ import { useQuery } from '@tanstack/react-query';
 import {
   getConstructionWorks,
   getKnowledgeCategories,
+  getKnowledgeMaterial,
   getKnowledgeMaterials,
   getKnowledgeUnits,
+  type KnowledgeQueryOptions,
 } from '@/entities/knowledge/api/knowledge-api';
 
 export const knowledgeQueryKeys = {
   all: ['knowledge'] as const,
-  categories: () => [...knowledgeQueryKeys.all, 'categories'] as const,
-  constructionWorks: (categoryId?: string, search?: string) =>
-    [...knowledgeQueryKeys.all, 'construction-works', categoryId ?? 'all', search ?? ''] as const,
-  materials: (categoryId?: string, search?: string) =>
-    [...knowledgeQueryKeys.all, 'materials', categoryId ?? 'all', search ?? ''] as const,
-  units: () => [...knowledgeQueryKeys.all, 'units'] as const,
+  categories: (options?: KnowledgeQueryOptions) =>
+    [...knowledgeQueryKeys.all, 'categories', options ?? {}] as const,
+  constructionWorks: (categoryId?: string, options?: KnowledgeQueryOptions) =>
+    [...knowledgeQueryKeys.all, 'construction-works', categoryId ?? 'all', options ?? {}] as const,
+  material: (id: string) => [...knowledgeQueryKeys.all, 'materials', 'detail', id] as const,
+  materials: (categoryId?: string, options?: KnowledgeQueryOptions) =>
+    [...knowledgeQueryKeys.all, 'materials', categoryId ?? 'all', options ?? {}] as const,
+  units: (options?: KnowledgeQueryOptions) =>
+    [...knowledgeQueryKeys.all, 'units', options ?? {}] as const,
 };
 
-export function useKnowledgeCategoriesQuery(enabled = true) {
+export function useKnowledgeCategoriesQuery(
+  enabled = true,
+  options: KnowledgeQueryOptions = { pageSize: 100 },
+) {
   return useQuery({
     enabled,
-    queryFn: ({ signal }) => getKnowledgeCategories(signal),
-    queryKey: knowledgeQueryKeys.categories(),
+    queryFn: ({ signal }) => getKnowledgeCategories(signal, options),
+    queryKey: knowledgeQueryKeys.categories(options),
   });
 }
 
 export function useConstructionWorksQuery(categoryId?: string, enabled = true, search?: string) {
+  const options = { pageSize: 100, search };
+
   return useQuery({
     enabled,
-    queryFn: ({ signal }) => getConstructionWorks(categoryId, signal, { pageSize: 100, search }),
-    queryKey: knowledgeQueryKeys.constructionWorks(categoryId, search),
+    queryFn: ({ signal }) => getConstructionWorks(categoryId, signal, options),
+    queryKey: knowledgeQueryKeys.constructionWorks(categoryId, options),
   });
 }
 
-export function useKnowledgeMaterialsQuery(categoryId?: string, enabled = true, search?: string) {
+export function useKnowledgeMaterialQuery(id: string, enabled = true) {
   return useQuery({
-    enabled,
-    queryFn: ({ signal }) => getKnowledgeMaterials(categoryId, signal, { pageSize: 100, search }),
-    queryKey: knowledgeQueryKeys.materials(categoryId, search),
+    enabled: enabled && id.length > 0,
+    queryFn: ({ signal }) => getKnowledgeMaterial(id, signal),
+    queryKey: knowledgeQueryKeys.material(id),
   });
 }
 
-export function useKnowledgeUnitsQuery() {
+export function useKnowledgeMaterialsQuery(
+  categoryId?: string,
+  enabled = true,
+  search?: string,
+  options: KnowledgeQueryOptions = {},
+) {
+  const queryOptions = { pageSize: 100, search, ...options };
+
   return useQuery({
-    queryFn: ({ signal }) => getKnowledgeUnits(signal),
-    queryKey: knowledgeQueryKeys.units(),
+    enabled,
+    queryFn: ({ signal }) => getKnowledgeMaterials(categoryId, signal, queryOptions),
+    queryKey: knowledgeQueryKeys.materials(categoryId, queryOptions),
+  });
+}
+
+export function useKnowledgeUnitsQuery(options: KnowledgeQueryOptions = { pageSize: 100 }) {
+  return useQuery({
+    queryFn: ({ signal }) => getKnowledgeUnits(signal, options),
+    queryKey: knowledgeQueryKeys.units(options),
   });
 }

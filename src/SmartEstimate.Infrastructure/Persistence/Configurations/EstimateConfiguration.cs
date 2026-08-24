@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Domain.Estimates.ValueObjects;
+using SmartEstimate.Domain.Objects;
 
 namespace SmartEstimate.Infrastructure.Persistence.Configurations;
 
@@ -26,21 +27,18 @@ public sealed class EstimateConfiguration : IEntityTypeConfiguration<Estimate>
             .HasMaxLength(64)
             .IsRequired();
 
+        builder.Property(estimate => estimate.ObjectId)
+            .IsRequired();
+
         builder.Property(estimate => estimate.Currency)
             .HasMaxLength(3)
             .IsUnicode(false)
             .IsRequired();
 
-        builder.Property(estimate => estimate.ObjectType)
+        builder.Property(estimate => estimate.Status)
             .HasConversion<string>()
             .HasMaxLength(32)
             .IsRequired();
-
-        builder.Property(estimate => estimate.ObjectAddress)
-            .HasMaxLength(512);
-
-        builder.Property(estimate => estimate.TotalArea)
-            .HasPrecision(18, 2);
 
         builder.Property(estimate => estimate.Notes)
             .HasMaxLength(2_000);
@@ -84,7 +82,18 @@ public sealed class EstimateConfiguration : IEntityTypeConfiguration<Estimate>
         builder.HasIndex(estimate => estimate.CreatedAt)
             .HasDatabaseName("IX_Estimates_CreatedAt");
 
+        builder.HasIndex(estimate => estimate.ObjectId)
+            .HasDatabaseName("IX_Estimates_ObjectId");
+
+        builder.HasIndex(estimate => estimate.Status)
+            .HasDatabaseName("IX_Estimates_Status");
+
         builder.HasQueryFilter(estimate => !estimate.IsDeleted);
+
+        builder.HasOne<EstimateObject>()
+            .WithMany()
+            .HasForeignKey(estimate => estimate.ObjectId)
+            .OnDelete(DeleteBehavior.Restrict);
 
         builder.HasMany(estimate => estimate.Zones)
             .WithOne()

@@ -75,6 +75,13 @@ const hasTags = (record: StudioRecord): record is ConstructionWork | KnowledgeMa
   'tags' in record;
 const hasUnit = (record: StudioRecord): record is ConstructionWork | KnowledgeMaterial =>
   'unitId' in record;
+
+const statusBadgeClassName: Record<KnowledgeStatus, string> = {
+  Active: 'border-emerald-200 bg-emerald-50 text-emerald-700',
+  Archived: 'border-slate-200 bg-slate-50 text-slate-600',
+  Draft: 'border-amber-200 bg-amber-50 text-amber-700',
+};
+
 export function KnowledgeStudioPage() {
   const { locale, t } = useTranslation();
   const client = useQueryClient();
@@ -232,6 +239,41 @@ export function KnowledgeStudioPage() {
     return t('knowledgeStudio.status.draft');
   };
 
+  const categoryLabel = (categoryId?: string | null) => {
+    const category = categoryOptions.find((item) => item.id === categoryId);
+    return category ? getLocalizedText(category.name, locale) : t('knowledgeStudio.card.noCategory');
+  };
+
+  const unitLabel = (unitId?: string) => {
+    const unit = unitOptions.find((item) => item.id === unitId);
+    return unit ? unit.symbol : t('knowledgeStudio.card.noUnit');
+  };
+
+  const recordMeta = (record: StudioRecord) => {
+    if ('symbol' in record) {
+      return `${record.symbol} · ${getLocalizedText(record.name, locale)}`;
+    }
+
+    if ('parentCategoryId' in record) {
+      return record.parentCategoryId
+        ? t('knowledgeStudio.card.parentCategory', {
+            category: categoryLabel(record.parentCategoryId),
+          })
+        : t('knowledgeStudio.card.rootCategory');
+    }
+
+    if (hasUnit(record)) {
+      const parts = [categoryLabel(record.categoryId), unitLabel(record.unitId)];
+      if (hasTags(record) && record.tags.length > 0) {
+        parts.push(record.tags.slice(0, 3).join(', '));
+      }
+
+      return parts.join(' · ');
+    }
+
+    return '';
+  };
+
   const updateForm = <TKey extends keyof FormState>(key: TKey, value: FormState[TKey]) =>
     setForm((current) => ({ ...current, [key]: value }));
 
@@ -365,10 +407,14 @@ export function KnowledgeStudioPage() {
                   type="button"
                 >
                   <p className="truncate font-medium">{getLocalizedText(record.name, locale)}</p>
-                  <p className="mt-1 truncate text-xs text-muted-foreground">{record.id}</p>
+                  <p className="mt-1 truncate text-sm text-muted-foreground">{recordMeta(record)}</p>
                 </button>
                 <div className="flex shrink-0 items-center gap-2">
-                  <span className="rounded-full bg-muted px-2 py-1 text-xs text-muted-foreground">
+                  <span
+                    className={`rounded-full border px-2 py-1 text-xs font-medium ${
+                      statusBadgeClassName[record.status]
+                    }`}
+                  >
                     {statusText(record.status)}
                   </span>
                   <Button

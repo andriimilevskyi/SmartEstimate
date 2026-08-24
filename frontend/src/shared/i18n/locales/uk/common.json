@@ -1,8 +1,22 @@
 {
   "actions": {
+    "cancel": "Скасувати",
     "retry": "Спробувати ще раз"
   },
   "errors": {
+    "api": {
+      "CustomerHasObjects": "Клієнта не можна видалити назавжди, бо з ним пов’язані об’єкти.",
+      "CustomerNotFound": "Клієнта не знайдено.",
+      "EstimateNotFound": "Кошторис не знайдено.",
+      "EstimateNumberAlreadyExists": "Кошторис із таким номером уже існує.",
+      "EstimatePermanentDeleteRequiresSoftDelete": "Щоб видалити кошторис назавжди, спочатку виконайте звичайне видалення.",
+      "ObjectHasEstimates": "Об’єкт не можна видалити назавжди, бо з ним пов’язані кошториси.",
+      "ObjectNotFound": "Об’єкт не знайдено.",
+      "PriceNotFound": "Ціну не знайдено.",
+      "PriceTargetInactive": "Позиція для ціни неактивна.",
+      "PriceTargetNotFound": "Позицію для ціни не знайдено.",
+      "ValidationError": "Перевірте введені дані."
+    },
     "requestFailed": "Не вдалося виконати запит."
   },
   "foundation": {
@@ -32,8 +46,243 @@
     "expandSidebar": "Розгорнути бічну панель",
     "foundation": "Фундамент",
     "knowledgeStudio": "Knowledge Studio",
+    "objects": "Об'єкти",
     "primaryNavigation": "Основна навігація",
     "productName": "SmartEstimate",
-    "skipToContent": "Перейти до робочого простору"
+    "skipToContent": "Перейти до робочого простору",
+    "aiAssistant": "AI-помічник",
+    "customers": "Клієнти",
+    "materials": "Матеріали",
+    "overview": "Огляд",
+    "pricing": "Ціноутворення",
+    "reports": "Звіти",
+    "settings": "Налаштування"
+  },
+  "breadcrumbs": {
+    "label": "Навігаційний шлях"
+  },
+  "comingSoon": {
+    "eyebrow": "У розробці",
+    "openKnowledgeStudio": "Відкрити Knowledge Studio"
+  },
+  "overview": {
+    "actions": {
+      "addCustomer": "Додати клієнта",
+      "createEstimate": "Створити кошторис",
+      "createObject": "Створити об'єкт",
+      "openKnowledgeStudio": "Відкрити Knowledge Studio"
+    },
+    "description": "Короткий стан роботи: смети, останні об’єкти та швидкі переходи до основних сценаріїв.",
+    "eyebrow": "Огляд",
+    "metrics": {
+      "approved": "Погоджені",
+      "completed": "Завершені",
+      "draft": "Чернетки",
+      "inProgress": "В роботі",
+      "sent": "Відправлені",
+      "total": "Усього смет"
+    },
+    "openAll": "Відкрити всі",
+    "quickActions": {
+      "title": "Швидкі дії"
+    },
+    "recentEstimates": {
+      "empty": "Поки немає створених кошторисів.",
+      "title": "Останні кошториси"
+    },
+    "recentObjects": {
+      "empty": "Поки немає створених об’єктів.",
+      "noCustomer": "Замовник не вказаний",
+      "title": "Останні об’єкти"
+    },
+    "states": {
+      "error": "Огляд зараз недоступний. Перевірте з’єднання та спробуйте ще раз.",
+      "loading": "Завантаження огляду..."
+    },
+    "title": "Огляд SmartEstimate"
+  },
+  "customers": {
+    "actions": {
+      "archive": "Архівувати",
+      "archived": "Архівовано",
+      "deletePermanently": "Видалити назавжди",
+      "edit": "Редагувати",
+      "restore": "Відновити"
+    },
+    "backToList": "До клієнтів",
+    "create": {
+      "action": "Додати клієнта",
+      "cancel": "Скасувати",
+      "submit": "Створити клієнта",
+      "title": "Новий клієнт"
+    },
+    "delete": {
+      "confirmation": "Видалити клієнта назавжди? Дію неможливо скасувати.",
+      "title": "Видалити клієнта назавжди"
+    },
+    "description": "Мінімальна база замовників для зв’язку з об’єктами та кошторисами.",
+    "details": {
+      "createdAt": "Створено",
+      "eyebrow": "Клієнт",
+      "info": "Інформація про клієнта",
+      "noObjects": "Для цього клієнта ще немає об’єктів.",
+      "objects": "Пов’язані об’єкти",
+      "updatedAt": "Остання зміна"
+    },
+    "edit": {
+      "submit": "Зберегти зміни",
+      "title": "Редагувати клієнта"
+    },
+    "eyebrow": "Клієнти",
+    "filters": {
+      "active": "Активні",
+      "all": "Усі",
+      "archived": "Архівні"
+    },
+    "form": {
+      "email": "Email",
+      "name": "Ім’я або назва клієнта",
+      "note": "Примітка",
+      "phone": "Телефон"
+    },
+    "messages": {
+      "archiveError": "Не вдалося архівувати клієнта.",
+      "archived": "Клієнта архівовано.",
+      "created": "Клієнта створено.",
+      "createError": "Не вдалося створити клієнта.",
+      "deleted": "Клієнта видалено назавжди.",
+      "deleteError": "Не вдалося видалити клієнта.",
+      "restored": "Клієнта відновлено.",
+      "restoreError": "Не вдалося відновити клієнта.",
+      "updated": "Клієнта оновлено.",
+      "updateError": "Не вдалося оновити клієнта."
+    },
+    "search": "Пошук за ім’ям, телефоном або email",
+    "states": {
+      "emptyAllDescription": "Жодного клієнта ще не створено.",
+      "emptyAllTitle": "Список клієнтів порожній",
+      "emptyArchivedDescription": "Тут з’являться клієнти, яких ви архівуєте.",
+      "emptyArchivedTitle": "Архів порожній",
+      "emptyDescription": "Додайте першого клієнта або створіть його під час створення кошторису.",
+      "emptyTitle": "Клієнтів ще немає",
+      "error": "Клієнти зараз недоступні.",
+      "loading": "Завантаження клієнтів...",
+      "unavailableDescription": "Клієнт міг бути видалений або зараз недоступний.",
+      "unavailableTitle": "Клієнт недоступний"
+    },
+    "title": "Клієнти",
+    "validation": {
+      "name": "Вкажіть ім’я або назву клієнта."
+    }
+  },
+  "pricing": {
+    "actions": {
+      "archive": "Архівувати",
+      "next": "Наступна сторінка",
+      "previous": "Попередня сторінка",
+      "save": "Зберегти"
+    },
+    "description": "Поточні ціни для матеріалів і робіт з історією, валютою, постачальником та регіоном.",
+    "dialogs": {
+      "archiveDescription": "Ціна стане недоступною для нових розрахунків, але залишиться в історії.",
+      "archiveTitle": "Архівувати цю ціну?"
+    },
+    "editor": {
+      "currency": "Валюта",
+      "date": "Дата",
+      "fallbackTitle": "Ціна",
+      "notes": "Нотатки",
+      "price": "Ціна",
+      "region": "Регіон",
+      "selectRecord": "Оберіть запис",
+      "source": "Джерело",
+      "supplier": "Постачальник"
+    },
+    "eyebrow": "Pricing foundation",
+    "fallback": {
+      "defaultSupplier": "Без постачальника",
+      "globalRegion": "Усі регіони",
+      "noCategory": "Без категорії"
+    },
+    "filters": {
+      "allCategories": "Усі категорії",
+      "category": "Категорія",
+      "currency": "Валюта",
+      "missingOnly": "Без ціни",
+      "region": "Регіон",
+      "regionPlaceholder": "UA-KY",
+      "search": "Пошук",
+      "supplier": "Постачальник",
+      "supplierShort": "Постач."
+    },
+    "history": {
+      "empty": "Історії ще немає.",
+      "loading": "Завантаження...",
+      "title": "Історія"
+    },
+    "messages": {
+      "archiveError": "Не вдалося архівувати ціну.",
+      "archived": "Ціну архівовано.",
+      "saveError": "Не вдалося зберегти ціну.",
+      "saved": "Ціну збережено.",
+      "validationError": "Введіть коректну ціну."
+    },
+    "pagination": "Сторінка {{page}} з {{total}}",
+    "sources": {
+      "AiRecommendation": "AI-рекомендація",
+      "Import": "Імпорт",
+      "Manual": "Вручну",
+      "MarketReference": "Ринковий орієнтир",
+      "SupplierIntegration": "Інтеграція з постачальником"
+    },
+    "states": {
+      "empty": "Записів не знайдено.",
+      "error": "Каталог цін зараз недоступний. Перевірте з'єднання та спробуйте ще раз.",
+      "loading": "Завантаження цін..."
+    },
+    "status": {
+      "Active": "Активна",
+      "Archived": "Архівна"
+    },
+    "targets": {
+      "ConstructionWork": "Роботи",
+      "Material": "Матеріали"
+    },
+    "title": "Ціноутворення"
+  },
+  "placeholders": {
+    "aiAssistant": {
+      "description": "AI-помічник з’явиться після впровадження AI Gateway та рекомендацій. На цьому етапі AI API не підключені.",
+      "title": "AI-помічник"
+    },
+    "materials": {
+      "description": "Операційний каталог матеріалів зараз адмініструється у Knowledge Studio. Окремий модуль матеріалів буде додано пізніше для закупівель і норм витрат.",
+      "title": "Матеріали"
+    },
+    "pricing": {
+      "description": "Тут буде керування прайсами, регіональними цінами та історією змін. Pricing Engine ще не реалізований.",
+      "title": "Ціноутворення"
+    },
+    "reports": {
+      "description": "Розділ буде містити аналітику, фінансові підсумки та звіти за об’єктами. Повноцінна система звітів ще не реалізована.",
+      "title": "Звіти"
+    }
+  },
+  "settings": {
+    "dateFormats": {
+      "long": "Довгий",
+      "medium": "Середній",
+      "short": "Короткий"
+    },
+    "description": "Базові налаштування інтерфейсу без профілю користувача та авторизації.",
+    "eyebrow": "Налаштування",
+    "interface": {
+      "currencyFormat": "Формат валюти",
+      "dateFormat": "Формат дати",
+      "description": "Ці параметри впливають лише на відображення в інтерфейсі.",
+      "language": "Мова інтерфейсу",
+      "title": "Інтерфейс"
+    },
+    "title": "Налаштування"
   }
 }

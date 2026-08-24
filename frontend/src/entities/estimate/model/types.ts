@@ -6,6 +6,28 @@ export type EstimateObjectType =
   | 'IndustrialSpace'
   | 'Other';
 
+export type EstimateStatus =
+  | 'Draft'
+  | 'InProgress'
+  | 'Sent'
+  | 'Approved'
+  | 'Completed'
+  | 'Archived';
+
+export interface EstimateBusinessContext {
+  address: string | null;
+  customerEmail: string | null;
+  customerId: string;
+  customerName: string;
+  customerNote: string | null;
+  customerPhone: string | null;
+  description: string | null;
+  id: string;
+  name: string;
+  objectType: EstimateObjectType;
+  totalArea: number | null;
+}
+
 export interface EstimateZone {
   grandTotal: number;
   id: string;
@@ -17,11 +39,15 @@ export interface EstimateZone {
 
 export interface EstimateLineItem {
   id: string;
+  isUnitPriceManuallyOverridden: boolean;
   knowledgeItemId?: string | null;
   measurementUnit: string;
   name: string;
   notes: string | null;
+  nameSource: 'KnowledgeSnapshot' | 'Custom' | 'Legacy';
+  priceCapturedAt: string | null;
   quantity: number;
+  sourcePriceId: string | null;
   total: number;
   unitPrice: number;
   zoneId: string;
@@ -30,14 +56,15 @@ export interface EstimateLineItem {
 export interface EstimateSummary {
   createdAt: string;
   currency: string;
+  deletedAt: string | null;
   estimateNumber: string;
   grandTotal: number;
   id: string;
-  objectAddress: string | null;
-  objectType: EstimateObjectType;
+  isDeleted: boolean;
+  object: EstimateBusinessContext;
+  status: EstimateStatus;
   totalLabor: number;
   totalMaterials: number;
-  totalArea: number | null;
   updatedAt: string;
   version: number;
 }
@@ -56,14 +83,20 @@ export interface EstimateList {
   totalCount: number;
 }
 
+export interface EstimateDocumentTemplate {
+  code: string;
+  description: string;
+  format: 'Pdf';
+  name: string;
+  template: 'FullEstimate' | 'ShortEstimate' | 'CommercialProposal';
+}
+
 export interface CreateEstimatePayload {
   currency: string;
   estimateNumber: string;
   materialItems?: CreateEstimateLineItem[];
   notes?: string;
-  objectAddress?: string | null;
-  objectType: EstimateObjectType;
-  totalArea?: number | null;
+  objectId: string;
   workItems?: CreateEstimateLineItem[];
   zones: string[];
 }
@@ -82,7 +115,7 @@ export interface AddEstimateItemPayload {
   knowledgeItemId: string;
   notes?: string | null;
   quantity: number;
-  unitPrice: number;
+  unitPrice?: number | null;
   zoneId: string;
 }
 

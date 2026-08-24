@@ -7,10 +7,13 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
 using Serilog;
+using SmartEstimate.Api.Endpoints.Business;
 using SmartEstimate.Api.Endpoints.Estimates;
 using SmartEstimate.Api.Endpoints.Knowledge;
+using SmartEstimate.Api.Endpoints.Pricing;
 using SmartEstimate.Api.ExceptionHandling;
 using SmartEstimate.Application;
+using SmartEstimate.Documents;
 using SmartEstimate.Infrastructure;
 using SmartEstimate.Infrastructure.Persistence;
 
@@ -67,6 +70,7 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod());
 });
 builder.Services.AddApplication();
+builder.Services.AddDocuments();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
@@ -124,7 +128,10 @@ app.MapHealthChecks("/health/ready", new HealthCheckOptions
     Predicate = check => check.Tags.Contains("ready")
 });
 app.MapEstimateEndpoints();
+app.MapEstimateDocumentEndpoints();
+app.MapBusinessEndpoints();
 app.MapKnowledgeEndpoints();
+app.MapPricingEndpoints();
 
 app.Run();
 

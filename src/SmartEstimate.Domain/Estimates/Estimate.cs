@@ -17,19 +17,16 @@ public sealed class Estimate
 
     private Estimate(
         EstimateNumber number,
+        Guid objectId,
         string currency,
-        EstimateObjectType objectType,
-        string? objectAddress,
-        decimal? totalArea,
         string? notes,
         DateTimeOffset createdAt)
     {
         Id = Guid.NewGuid();
         Number = number ?? throw new ArgumentNullException(nameof(number));
+        ObjectId = objectId == Guid.Empty ? throw new ArgumentException("Object reference is required.", nameof(objectId)) : objectId;
         Currency = NormalizeCurrency(currency);
-        ObjectType = objectType;
-        ObjectAddress = NormalizeObjectAddress(objectAddress);
-        TotalArea = NormalizeTotalArea(totalArea);
+        Status = EstimateStatus.Draft;
         Notes = NormalizeNotes(notes);
         CreatedAt = createdAt;
         UpdatedAt = createdAt;
@@ -40,13 +37,11 @@ public sealed class Estimate
 
     public EstimateNumber Number { get; private set; } = null!;
 
+    public Guid ObjectId { get; private set; }
+
     public string Currency { get; private set; } = string.Empty;
 
-    public EstimateObjectType ObjectType { get; private set; }
-
-    public string? ObjectAddress { get; private set; }
-
-    public decimal? TotalArea { get; private set; }
+    public EstimateStatus Status { get; private set; }
 
     public string? Notes { get; private set; }
 
@@ -78,24 +73,22 @@ public sealed class Estimate
 
     public Money GrandTotal => new(GrandTotalAmount, Currency);
 
-    public static Estimate Create(EstimateNumber number, string currency, string? notes, DateTimeOffset createdAt)
+    public static Estimate Create(EstimateNumber number, Guid objectId, string currency, string? notes, DateTimeOffset createdAt)
     {
-        var estimate = new Estimate(number, currency, EstimateObjectType.Apartment, null, null, notes, createdAt);
+        var estimate = new Estimate(number, objectId, currency, notes, createdAt);
         estimate.AddInitialZone("Основна зона", 0, createdAt);
         return estimate;
     }
 
     public static Estimate Create(
         EstimateNumber number,
+        Guid objectId,
         string currency,
-        EstimateObjectType objectType,
-        string? objectAddress,
-        decimal? totalArea,
         string? notes,
         IEnumerable<string> zoneNames,
         DateTimeOffset createdAt)
     {
-        var estimate = new Estimate(number, currency, objectType, objectAddress, totalArea, notes, createdAt);
+        var estimate = new Estimate(number, objectId, currency, notes, createdAt);
         var normalizedZones = zoneNames
             .Where(zoneName => !string.IsNullOrWhiteSpace(zoneName))
             .Select(zoneName => zoneName.Trim())
@@ -113,6 +106,13 @@ public sealed class Estimate
         }
 
         return estimate;
+    }
+
+    public void ChangeStatus(EstimateStatus status, DateTimeOffset updatedAt)
+    {
+        EnsureActive();
+        Status = status;
+        Touch(updatedAt);
     }
 
     public Guid AddZone(string name, int sortOrder, DateTimeOffset createdAt)
@@ -194,7 +194,12 @@ public sealed class Estimate
         string? notes,
         DateTimeOffset createdAt,
         string? knowledgeItemId = null,
-        Guid? zoneId = null)
+        Guid? zoneId = null,
+        Guid? sourcePriceId = null,
+        DateTimeOffset? priceCapturedAt = null,
+        bool isUnitPriceManuallyOverridden = false,
+        LocalizedNameSnapshot? nameSnapshot = null,
+        EstimateItemNameSource? nameSource = null)
     {
         EnsureActive();
         EnsureCurrency(unitPrice);
@@ -210,7 +215,12 @@ public sealed class Estimate
             unitPrice,
             notes,
             createdAt,
-            knowledgeItemId));
+            knowledgeItemId,
+            nameSnapshot,
+            ResolveNameSource(knowledgeItemId, nameSnapshot, nameSource),
+            sourcePriceId,
+            priceCapturedAt,
+            isUnitPriceManuallyOverridden));
 
         RecalculateTotals(createdAt);
     }
@@ -223,7 +233,12 @@ public sealed class Estimate
         string? notes,
         DateTimeOffset createdAt,
         string? knowledgeItemId = null,
-        Guid? zoneId = null)
+        Guid? zoneId = null,
+        Guid? sourcePriceId = null,
+        DateTimeOffset? priceCapturedAt = null,
+        bool isUnitPriceManuallyOverridden = false,
+        LocalizedNameSnapshot? nameSnapshot = null,
+        EstimateItemNameSource? nameSource = null)
     {
         EnsureActive();
         EnsureCurrency(unitPrice);
@@ -239,7 +254,12 @@ public sealed class Estimate
             unitPrice,
             notes,
             createdAt,
-            knowledgeItemId));
+            knowledgeItemId,
+            nameSnapshot,
+            ResolveNameSource(knowledgeItemId, nameSnapshot, nameSource),
+            sourcePriceId,
+            priceCapturedAt,
+            isUnitPriceManuallyOverridden));
 
         RecalculateTotals(createdAt);
     }
@@ -421,40 +441,24 @@ public sealed class Estimate
 
     private static string NormalizeCurrency(string currency) => new Money(decimal.Zero, currency).Currency;
 
-    private static decimal? NormalizeTotalArea(decimal? totalArea)
+    private static EstimateItemNameSource ResolveNameSource(
+        string? knowledgeItemId,
+        LocalizedNameSnapshot? nameSnapshot,
+        EstimateItemNameSource? nameSource)
     {
-        if (totalArea is null)
+        if (nameSource is { } explicitSource)
         {
-            return null;
+            return explicitSource;
         }
 
-        if (totalArea <= decimal.Zero)
+        if (nameSnapshot is not null)
         {
-            throw new ArgumentOutOfRangeException(nameof(totalArea), "Total area must be greater than zero.");
+            return EstimateItemNameSource.KnowledgeSnapshot;
         }
 
-        if (decimal.Round(totalArea.Value, 2, MidpointRounding.AwayFromZero) != totalArea)
-        {
-            throw new ArgumentOutOfRangeException(nameof(totalArea), "Total area cannot have more than two decimal places.");
-        }
-
-        return totalArea;
-    }
-
-    private static string? NormalizeObjectAddress(string? objectAddress)
-    {
-        if (string.IsNullOrWhiteSpace(objectAddress))
-        {
-            return null;
-        }
-
-        var normalized = objectAddress.Trim();
-        if (normalized.Length > 512)
-        {
-            throw new ArgumentOutOfRangeException(nameof(objectAddress), "Object address cannot exceed 512 characters.");
-        }
-
-        return normalized;
+        return string.IsNullOrWhiteSpace(knowledgeItemId)
+            ? EstimateItemNameSource.Custom
+            : EstimateItemNameSource.Legacy;
     }
 
     private static string? NormalizeNotes(string? notes)

@@ -9,13 +9,16 @@ using SmartEstimate.Application.Estimates.DuplicateEstimateMaterialItem;
 using SmartEstimate.Application.Estimates.DuplicateEstimateWorkItem;
 using SmartEstimate.Application.Estimates.GetEstimateById;
 using SmartEstimate.Application.Estimates.GetEstimates;
+using SmartEstimate.Application.Estimates.PermanentDeleteEstimate;
 using SmartEstimate.Application.Estimates.RemoveEstimateMaterialItem;
 using SmartEstimate.Application.Estimates.RemoveEstimateZone;
 using SmartEstimate.Application.Estimates.RemoveEstimateWorkItem;
 using SmartEstimate.Application.Estimates.ReorderEstimateZones;
 using SmartEstimate.Application.Estimates.UpdateEstimateZone;
 using SmartEstimate.Application.Estimates.UpdateEstimateMaterialItem;
+using SmartEstimate.Application.Estimates.UpdateEstimateStatus;
 using SmartEstimate.Application.Estimates.UpdateEstimateWorkItem;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Contracts.Common;
 using SmartEstimate.Shared.Primitives;
 
@@ -64,6 +67,22 @@ public static class EstimateEndpoints
             .WithSummary("Delete an estimate")
             .WithDescription("Soft-deletes an active estimate.")
             .Produces(StatusCodes.Status204NoContent)
+            .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
+            .Produces<ApiResponse<object>>(StatusCodes.Status422UnprocessableEntity);
+
+        group.MapDelete("/{id:guid}/permanent", DeletePermanentlyAsync)
+            .WithName("DeleteEstimatePermanently")
+            .WithSummary("Permanently delete an estimate")
+            .WithDescription("Physically deletes an already soft-deleted estimate and its in-aggregate rows.")
+            .Produces(StatusCodes.Status204NoContent)
+            .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
+            .Produces<ApiResponse<object>>(StatusCodes.Status409Conflict)
+            .Produces<ApiResponse<object>>(StatusCodes.Status422UnprocessableEntity);
+
+        group.MapPatch("/{id:guid}/status", UpdateStatusAsync)
+            .WithName("UpdateEstimateStatus")
+            .WithSummary("Update estimate status")
+            .Produces<ApiResponse<EstimateDetailsResponse>>(StatusCodes.Status200OK)
             .Produces<ApiResponse<object>>(StatusCodes.Status404NotFound)
             .Produces<ApiResponse<object>>(StatusCodes.Status422UnprocessableEntity);
 
@@ -171,15 +190,14 @@ public static class EstimateEndpoints
         var result = await handler.HandleAsync(
             new CreateEstimateCommand(
                 request.EstimateNumber,
+                request.ObjectId,
                 request.Currency,
-                request.ObjectType,
-                request.ObjectAddress,
-                request.TotalArea,
                 request.Notes,
                 request.Zones,
                 request.WorkItems?.Select(MapLineItem).ToArray(),
                 request.MaterialItems?.Select(MapLineItem).ToArray()),
-            cancellationToken);
+            cancellationToken,
+            EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(
             result,
@@ -194,14 +212,29 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken,
         int page = 1,
-        int pageSize = 20)
+        int pageSize = 20,
+        string? search = null,
+        EstimateStatus? status = null,
+        Guid? customerId = null,
+        Guid? objectId = null)
     {
-        var result = await handler.HandleAsync(new GetEstimatesQuery(page, pageSize), cancellationToken);
+        var result = await handler.HandleAsync(new GetEstimatesQuery(page, pageSize, search, status, customerId, objectId), cancellationToken);
 
         return FromResult(
             result,
             httpContext,
             response => Results.Ok(ApiResponse<PagedEstimatesResponse>.FromData(response)));
+    }
+
+    private static async Task<IResult> UpdateStatusAsync(
+        Guid id,
+        UpdateEstimateStatusRequest request,
+        UpdateEstimateStatusHandler handler,
+        HttpContext httpContext,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleAsync(new UpdateEstimateStatusCommand(id, request.Status), cancellationToken, EstimateApiLocale.Resolve(httpContext));
+        return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
     private static async Task<IResult> GetByIdAsync(
@@ -210,7 +243,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new GetEstimateByIdQuery(id), cancellationToken);
+        var result = await handler.HandleAsync(new GetEstimateByIdQuery(id), cancellationToken, EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(
             result,
@@ -230,6 +263,18 @@ public static class EstimateEndpoints
             : ExpectedError(result.Error, httpContext);
     }
 
+    private static async Task<IResult> DeletePermanentlyAsync(
+        Guid id,
+        PermanentDeleteEstimateHandler handler,
+        HttpContext httpContext,
+        CancellationToken cancellationToken)
+    {
+        var result = await handler.HandleAsync(new PermanentDeleteEstimateCommand(id), cancellationToken);
+        return result.IsSuccess
+            ? Results.NoContent()
+            : ExpectedError(result.Error, httpContext);
+    }
+
     private static async Task<IResult> AddZoneAsync(
         Guid id,
         EstimateZoneRequest request,
@@ -237,7 +282,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new AddEstimateZoneCommand(id, request.Name), cancellationToken);
+        var result = await handler.HandleAsync(new AddEstimateZoneCommand(id, request.Name), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -249,7 +294,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new UpdateEstimateZoneCommand(id, zoneId, request.Name), cancellationToken);
+        var result = await handler.HandleAsync(new UpdateEstimateZoneCommand(id, zoneId, request.Name), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -260,7 +305,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new ReorderEstimateZonesCommand(id, request.ZoneIds), cancellationToken);
+        var result = await handler.HandleAsync(new ReorderEstimateZonesCommand(id, request.ZoneIds), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -271,7 +316,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new RemoveEstimateZoneCommand(id, zoneId), cancellationToken);
+        var result = await handler.HandleAsync(new RemoveEstimateZoneCommand(id, zoneId), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -292,7 +337,8 @@ public static class EstimateEndpoints
                 request.Quantity,
                 request.UnitPrice,
                 request.Notes),
-            cancellationToken);
+            cancellationToken,
+            EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
@@ -314,7 +360,8 @@ public static class EstimateEndpoints
                 request.Quantity,
                 request.UnitPrice,
                 request.Notes),
-            cancellationToken);
+            cancellationToken,
+            EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
@@ -339,7 +386,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new DuplicateEstimateWorkItemCommand(id, itemId), cancellationToken);
+        var result = await handler.HandleAsync(new DuplicateEstimateWorkItemCommand(id, itemId), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -360,7 +407,8 @@ public static class EstimateEndpoints
                 request.Quantity,
                 request.UnitPrice,
                 request.Notes),
-            cancellationToken);
+            cancellationToken,
+            EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
@@ -382,7 +430,8 @@ public static class EstimateEndpoints
                 request.Quantity,
                 request.UnitPrice,
                 request.Notes),
-            cancellationToken);
+            cancellationToken,
+            EstimateApiLocale.Resolve(httpContext));
 
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
@@ -407,7 +456,7 @@ public static class EstimateEndpoints
         HttpContext httpContext,
         CancellationToken cancellationToken)
     {
-        var result = await handler.HandleAsync(new DuplicateEstimateMaterialItemCommand(id, itemId), cancellationToken);
+        var result = await handler.HandleAsync(new DuplicateEstimateMaterialItemCommand(id, itemId), cancellationToken, EstimateApiLocale.Resolve(httpContext));
         return FromResult(result, httpContext, response => Results.Ok(ApiResponse<EstimateDetailsResponse>.FromData(response)));
     }
 
@@ -464,7 +513,9 @@ public static class EstimateEndpoints
         "ConstructionWorkNotFound" => StatusCodes.Status404NotFound,
         "MaterialNotFound" => StatusCodes.Status404NotFound,
         "KnowledgeUnitNotFound" => StatusCodes.Status404NotFound,
+        "ObjectNotFound" => StatusCodes.Status404NotFound,
         "EstimateNumberAlreadyExists" => StatusCodes.Status409Conflict,
+        "EstimatePermanentDeleteRequiresSoftDelete" => StatusCodes.Status409Conflict,
         _ => StatusCodes.Status400BadRequest
     };
 }

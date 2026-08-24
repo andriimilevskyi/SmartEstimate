@@ -1,6 +1,6 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Domain.Estimates.ValueObjects;
 using SmartEstimate.Shared.Primitives;
 
@@ -12,11 +12,12 @@ namespace SmartEstimate.Application.Estimates.UpdateEstimateMaterialItem;
 public sealed class UpdateEstimateMaterialItemHandler(
     IEstimateRepository repository,
     IValidator<UpdateEstimateMaterialItemCommand> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         UpdateEstimateMaterialItemCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         ArgumentNullException.ThrowIfNull(command);
 
@@ -47,6 +48,6 @@ public sealed class UpdateEstimateMaterialItemHandler(
 
         await repository.SaveChangesAsync(cancellationToken);
 
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

@@ -3,7 +3,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Application.Business.Abstractions;
 using SmartEstimate.Application.Knowledge.Abstractions;
+using SmartEstimate.Application.Pricing.Abstractions;
 using SmartEstimate.Infrastructure.Persistence;
 using SmartEstimate.Infrastructure.Persistence.Repositories;
 
@@ -26,11 +28,15 @@ public static class DependencyInjection
             options.UseNpgsql(connectionString, npgsqlOptions => npgsqlOptions.EnableRetryOnFailure()));
 
         services.AddScoped<IEstimateRepository, EstimateRepository>();
+        services.AddScoped<BusinessRepository>();
+        services.AddScoped<ICustomerRepository>(serviceProvider => serviceProvider.GetRequiredService<BusinessRepository>());
+        services.AddScoped<IEstimateObjectRepository>(serviceProvider => serviceProvider.GetRequiredService<BusinessRepository>());
         services.AddScoped<KnowledgeRepository>();
         services.AddScoped<ICategoryRepository>(serviceProvider => serviceProvider.GetRequiredService<KnowledgeRepository>());
         services.AddScoped<IConstructionWorkRepository>(serviceProvider => serviceProvider.GetRequiredService<KnowledgeRepository>());
         services.AddScoped<IMaterialRepository>(serviceProvider => serviceProvider.GetRequiredService<KnowledgeRepository>());
         services.AddScoped<IUnitRepository>(serviceProvider => serviceProvider.GetRequiredService<KnowledgeRepository>());
+        services.AddScoped<ICatalogPriceRepository, PricingRepository>();
 
         services.AddHealthChecks()
             .AddDbContextCheck<SmartEstimateDbContext>(

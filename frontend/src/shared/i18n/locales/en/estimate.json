@@ -16,16 +16,42 @@
     "unavailableDescription": "Check your connection and try again.",
     "unavailableTitle": "Estimate is unavailable"
   },
+  "estimateDocuments": {
+    "description": "Generate a professional PDF document for preview, approval, or customer handoff.",
+    "download": "Download PDF",
+    "loading": "Loading templates...",
+    "messages": {
+      "downloadError": "The PDF could not be downloaded. Please try again.",
+      "previewError": "The PDF preview could not be opened."
+    },
+    "preview": "Preview",
+    "template": "PDF template",
+    "title": "Documents",
+    "unavailable": "Document templates are unavailable right now."
+  },
   "estimateEditor": {
     "catalog": {
       "add": "Add item",
+      "addMaterial": "Add material",
+      "addMultiple": "Add multiple",
+      "addSelected": "Add selected",
+      "addWork": "Add work",
       "allCategories": "All categories",
       "category": "Work category",
       "constructionWork": "Construction work",
+      "empty": "No items match this search.",
+      "error": "The catalog or prices are unavailable.",
+      "hide": "Hide",
+      "loading": "Loading catalog...",
       "material": "Material",
+      "priceFromPricing": "The backend will capture the Pricing snapshot when the item is added.",
+      "priceMissing": "No price exists. Enter one manually or add the item with zero price.",
+      "recommended": "Recommended for zone",
       "search": "Quick search",
       "searchPlaceholder": "For example: putty, tile, cable...",
       "selectItem": "Select an item",
+      "selectedCount_one": "Selected: {{count}} item",
+      "selectedCount_other": "Selected: {{count}} items",
       "title": "Item catalog",
       "unit": "Measurement unit",
       "unitPlaceholder": "Select an item",
@@ -35,6 +61,7 @@
     "item": {
       "delete": "Remove",
       "deleteConfirmation": "Remove this item from the estimate?",
+      "deleteTitle": "Remove item",
       "duplicate": "Duplicate",
       "lineTotal": "Line total",
       "notes": "Comment",
@@ -43,7 +70,8 @@
       "saving": "Saving...",
       "unitPrice": "Unit price"
     },
-    "itemCount": "{{count}} items",
+    "itemCount_one": "{{count}} item",
+    "itemCount_other": "{{count}} items",
     "materialItems": {
       "empty": "Add a material from the catalog to begin.",
       "title": "Material items"
@@ -51,6 +79,9 @@
     "messages": {
       "added": "Item added to the estimate.",
       "addError": "The item could not be added. Please try again.",
+      "addValidationError": "Select an item and enter a valid quantity and price.",
+      "batchAdded_one": "{{count}} item added.",
+      "batchAdded_other": "{{count}} items added.",
       "deleted": "Item removed from the estimate.",
       "deleteError": "The item could not be removed. Please try again.",
       "duplicated": "Item duplicated.",
@@ -76,9 +107,12 @@
       "current": "Zone",
       "delete": "Delete zone",
       "deleteConfirmation": "Delete this zone together with its works and materials?",
+      "deleteTitle": "Delete zone",
       "moveDown": "Move down",
       "moveUp": "Move up",
-      "newName": "New zone name"
+      "newDescription": "Enter the name of the zone you want to add to the estimate.",
+      "newName": "New zone name",
+      "newTitle": "New zone"
     }
   },
   "estimates": {
@@ -88,7 +122,8 @@
       "cancel": "Cancel",
       "decreaseZone": "Decrease zone count",
       "description": "Create the estimate structure around the real object: type, area, address, and work zones.",
-      "futureZones": "Zones to be created: {{count}}",
+      "futureZones_one": "{{count}} zone will be created",
+      "futureZones_other": "{{count}} zones will be created",
       "increaseZone": "Increase zone count",
       "next": "Configure zones",
       "noZones": "Select at least one zone for the estimate.",
@@ -98,22 +133,44 @@
       "title": "Create estimate",
       "zoneDraftNotice": "Configure the future object structure. No zones have been created yet; they will be saved only after you click Create estimate."
     },
+    "deletedState": {
+      "badge": "Deleted",
+      "description": "This estimate has already been removed from the normal workflow. You can delete it permanently if it is no longer needed.",
+      "title": "Estimate deleted"
+    },
     "delete": {
       "action": "Delete",
-      "confirmation": "Delete this estimate? It will no longer be available in the workspace."
+      "confirmation": "Delete this estimate? It will no longer be available in the workspace.",
+      "title": "Delete estimate"
     },
     "description": "Create and review the first estimates in your workspace.",
     "eyebrow": "Sprint 1",
+    "filters": {
+      "allCustomers": "All customers",
+      "allObjects": "All objects",
+      "allStatuses": "All statuses",
+      "search": "Search by customer, object, or address"
+    },
     "form": {
       "currency": "Currency",
       "currencyPlaceholder": "UAH",
+      "customerEmail": "Customer email",
+      "customerName": "Customer name",
+      "customerNote": "Customer note",
+      "customerPhone": "Customer phone",
+      "existingObject": "Existing object",
+      "newObject": "New object",
       "notes": "Note",
       "notesPlaceholder": "Add a note for this estimate",
       "number": "Estimate number",
       "numberPlaceholder": "EST-001",
+      "object": "Object",
       "objectAddress": "Object address",
       "objectAddressPlaceholder": "Kyiv, Velyka Vasylkivska St, 72",
+      "objectDescription": "Object description",
+      "objectName": "Object name",
       "objectType": "Object type",
+      "selectObject": "Select an object",
       "totalArea": "Total area, m²",
       "totalAreaPlaceholder": "86.5"
     },
@@ -125,7 +182,15 @@
       "created": "Estimate created.",
       "createError": "The estimate could not be created. Please try again.",
       "deleted": "Estimate deleted.",
-      "deleteError": "The estimate could not be deleted. Please try again."
+      "deleteError": "The estimate could not be deleted. Please try again.",
+      "permanentlyDeleted": "Estimate deleted permanently.",
+      "permanentDeleteError": "Could not permanently delete the estimate."
+    },
+    "permanentDelete": {
+      "action": "Delete permanently",
+      "confirmation": "Delete this estimate permanently?",
+      "description": "The estimate will be deleted permanently. This action cannot be undone.",
+      "warning": "This action cannot be undone."
     },
     "objectTypes": {
       "Apartment": "Apartment",
@@ -146,10 +211,19 @@
       "loading": "Loading estimates...",
       "retry": "Try again"
     },
+    "status": {
+      "Approved": "Approved",
+      "Archived": "Archived",
+      "Completed": "Completed",
+      "Draft": "Draft",
+      "InProgress": "In progress",
+      "Sent": "Sent"
+    },
     "title": "Estimates",
     "validation": {
       "currency": "Use an ISO currency code, for example UAH.",
       "number": "Enter an estimate number or title.",
+      "object": "Select an object or create a new one.",
       "zones": "Add at least one repair zone."
     },
     "zones": {
@@ -185,6 +259,81 @@
       "utilityRoom": "Utility room",
       "wardrobe": "Wardrobe",
       "warehouse": "Warehouse area"
+    }
+  },
+  "objects": {
+    "actions": {
+      "archive": "Archive",
+      "archived": "Archived",
+      "deletePermanently": "Delete permanently",
+      "edit": "Edit",
+      "restore": "Restore"
+    },
+    "createdAt": "Created",
+    "customerInfo": "Customer",
+    "estimateCount": "Estimates",
+    "estimates": "Estimates",
+    "eyebrow": "Object",
+    "noEstimates": "No estimates for this object yet.",
+    "objectInfo": "Object information",
+    "updatedAt": "Last updated",
+    "backToList": "Back to objects",
+    "create": {
+      "action": "Create object",
+      "cancel": "Cancel",
+      "submit": "Create object",
+      "title": "New object"
+    },
+    "delete": {
+      "confirmation": "Delete this object permanently? This action cannot be undone.",
+      "title": "Delete object"
+    },
+    "description": "Objects connect customers with future and existing estimates.",
+    "edit": {
+      "submit": "Save changes",
+      "title": "Edit object"
+    },
+    "filters": {
+      "active": "Active",
+      "all": "All",
+      "allCustomers": "All customers",
+      "archived": "Archived"
+    },
+    "form": {
+      "address": "Address",
+      "customer": "Select customer",
+      "description": "Description",
+      "name": "Object name",
+      "totalArea": "Area, m²"
+    },
+    "messages": {
+      "archiveError": "Could not archive object.",
+      "archived": "Object archived.",
+      "created": "Object created.",
+      "createError": "Could not create object.",
+      "deleted": "Object deleted permanently.",
+      "deleteError": "Could not delete object.",
+      "restored": "Object restored.",
+      "restoreError": "Could not restore object.",
+      "updated": "Object updated.",
+      "updateError": "Could not update object."
+    },
+    "search": "Search by name, address, or customer",
+    "states": {
+      "emptyAllDescription": "No objects have been created yet.",
+      "emptyAllTitle": "Object list is empty",
+      "emptyArchivedDescription": "Archived objects will appear here.",
+      "emptyArchivedTitle": "Archive is empty",
+      "emptyDescription": "Create the first object or add one while creating an estimate.",
+      "emptyTitle": "No objects yet",
+      "error": "Objects are unavailable.",
+      "loading": "Loading objects...",
+      "unavailableDescription": "The object may have been deleted or is unavailable.",
+      "unavailableTitle": "Object unavailable"
+    },
+    "title": "Objects",
+    "validation": {
+      "required": "Select a customer and enter the object name."
     }
   }
 }

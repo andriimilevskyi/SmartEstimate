@@ -1,5 +1,19 @@
-import { FileText, Menu, PanelLeftClose, PanelLeftOpen } from 'lucide-react';
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import {
+  BarChart3,
+  Bot,
+  BookOpenText,
+  FileText,
+  FolderKanban,
+  LayoutDashboard,
+  Package,
+  PanelLeftClose,
+  PanelLeftOpen,
+  Settings,
+  Tags,
+  Users,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { Link, NavLink, Outlet, useLocation } from 'react-router-dom';
 
 import { LanguageSwitcher } from '@/features/change-language/ui/LanguageSwitcher';
 import { useTranslation } from '@/shared/i18n/use-translation';
@@ -7,21 +21,35 @@ import { useUiStore } from '@/shared/model/ui-store';
 import { Button } from '@/shared/ui/button';
 
 interface NavigationItem {
+  icon: LucideIcon;
   key: string;
-  to?: string;
+  to: string;
 }
 
 const navigationItems: readonly NavigationItem[] = [
-  { key: 'navigation.dashboard' },
-  { key: 'navigation.customers' },
-  { key: 'navigation.projects' },
-  { key: 'navigation.estimates', to: '/estimates' },
-  { key: 'navigation.knowledgeStudio', to: '/knowledge-studio' },
-  { key: 'navigation.materials' },
-  { key: 'navigation.pricing' },
-  { key: 'navigation.reports' },
-  { key: 'navigation.aiAssistant' },
-  { key: 'navigation.settings' },
+  { icon: LayoutDashboard, key: 'navigation.dashboard', to: '/overview' },
+  { icon: Users, key: 'navigation.customers', to: '/customers' },
+  { icon: FolderKanban, key: 'navigation.projects', to: '/objects' },
+  { icon: FileText, key: 'navigation.estimates', to: '/estimates' },
+  { icon: BookOpenText, key: 'navigation.knowledgeStudio', to: '/knowledge-studio' },
+  { icon: Package, key: 'navigation.materials', to: '/materials' },
+  { icon: Tags, key: 'navigation.pricing', to: '/pricing' },
+  { icon: BarChart3, key: 'navigation.reports', to: '/reports' },
+  { icon: Bot, key: 'navigation.aiAssistant', to: '/ai-assistant' },
+  { icon: Settings, key: 'navigation.settings', to: '/settings' },
+] as const;
+
+const pageTitleKeyByPath = [
+  { key: 'shell.overview', path: '/overview' },
+  { key: 'shell.customers', path: '/customers' },
+  { key: 'shell.objects', path: '/objects' },
+  { key: 'shell.estimates', path: '/estimates' },
+  { key: 'shell.knowledgeStudio', path: '/knowledge-studio' },
+  { key: 'shell.materials', path: '/materials' },
+  { key: 'shell.pricing', path: '/pricing' },
+  { key: 'shell.reports', path: '/reports' },
+  { key: 'shell.aiAssistant', path: '/ai-assistant' },
+  { key: 'shell.settings', path: '/settings' },
 ] as const;
 
 export function ApplicationShell() {
@@ -42,13 +70,14 @@ export function ApplicationShell() {
         }`}
       >
         <div className="flex h-16 items-center justify-between border-b border-border px-3">
-          <span
-            className={`font-semibold tracking-tight text-foreground ${
+          <Link
+            className={`rounded-md font-semibold tracking-tight text-foreground hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
               isSidebarCollapsed ? 'sr-only' : ''
             }`}
+            to="/overview"
           >
             {t('shell.productName')}
-          </span>
+          </Link>
           <Button
             aria-label={isSidebarCollapsed ? t('shell.expandSidebar') : t('shell.collapseSidebar')}
             className="shrink-0"
@@ -65,43 +94,30 @@ export function ApplicationShell() {
         </div>
         <nav className="flex-1 space-y-1 p-3">
           {navigationItems.map((item) => {
+            const Icon = item.icon;
             const itemContent = isSidebarCollapsed ? (
-              item.to ? (
-                <FileText aria-hidden="true" className="size-4" />
-              ) : (
-                <Menu aria-hidden="true" className="size-4" />
-              )
+              <Icon aria-hidden="true" className="size-4" />
             ) : (
-              t(item.key)
+              <>
+                <Icon aria-hidden="true" className="size-4" />
+                <span>{t(item.key)}</span>
+              </>
             );
             const className = `flex h-11 items-center rounded-md px-3 text-sm transition-colors ${
-              isSidebarCollapsed ? 'justify-center px-0' : ''
+              isSidebarCollapsed ? 'justify-center px-0' : 'gap-3'
             }`;
 
-            if (item.to) {
-              return (
-                <NavLink
-                  className={({ isActive }) =>
-                    `${className} ${isActive ? 'bg-accent font-medium text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}`
-                  }
-                  key={item.key}
-                  title={isSidebarCollapsed ? t(item.key) : undefined}
-                  to={item.to}
-                >
-                  {itemContent}
-                </NavLink>
-              );
-            }
-
             return (
-              <span
-                aria-disabled="true"
-                className={`${className} cursor-not-allowed text-muted-foreground/60`}
+              <NavLink
+                className={({ isActive }) =>
+                  `${className} ${isActive ? 'bg-accent font-medium text-accent-foreground' : 'text-muted-foreground hover:bg-accent hover:text-accent-foreground'}`
+                }
                 key={item.key}
                 title={isSidebarCollapsed ? t(item.key) : undefined}
+                to={item.to}
               >
                 {itemContent}
-              </span>
+              </NavLink>
             );
           })}
         </nav>
@@ -110,11 +126,10 @@ export function ApplicationShell() {
       <div className={isSidebarCollapsed ? 'lg:pl-[72px]' : 'lg:pl-64'}>
         <header className="flex h-16 items-center justify-between gap-4 border-b border-border bg-card px-4 sm:px-6">
           <p className="text-sm font-medium text-muted-foreground">
-            {location.pathname.startsWith('/estimates')
-              ? t('shell.estimates')
-              : location.pathname.startsWith('/knowledge-studio')
-                ? t('shell.knowledgeStudio')
-                : t('shell.foundation')}
+            {t(
+              pageTitleKeyByPath.find((item) => location.pathname.startsWith(item.path))?.key ??
+                'shell.foundation',
+            )}
           </p>
           <LanguageSwitcher />
         </header>

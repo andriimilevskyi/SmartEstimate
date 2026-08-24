@@ -1,3 +1,5 @@
+using SmartEstimate.Domain.Estimates;
+
 namespace SmartEstimate.Api.Endpoints.Estimates;
 
 /// <summary>
@@ -7,7 +9,7 @@ public sealed record AddEstimateWorkItemRequest(
     Guid ZoneId,
     string ConstructionWorkId,
     decimal Quantity,
-    decimal UnitPrice,
+    decimal? UnitPrice,
     string? Notes);
 
 /// <summary>
@@ -17,7 +19,7 @@ public sealed record AddEstimateMaterialItemRequest(
     Guid ZoneId,
     string MaterialId,
     decimal Quantity,
-    decimal UnitPrice,
+    decimal? UnitPrice,
     string? Notes);
 
 /// <summary>
@@ -37,3 +39,8 @@ public sealed record EstimateZoneRequest(string Name);
 /// HTTP request for replacing the estimate zone order.
 /// </summary>
 public sealed record ReorderEstimateZonesRequest(IReadOnlyCollection<Guid> ZoneIds);
+
+/// <summary>
+/// HTTP request for changing the commercial status of an estimate.
+/// </summary>
+public sealed record UpdateEstimateStatusRequest(EstimateStatus Status);

@@ -1,9 +1,10 @@
 import { FileText, LoaderCircle, Plus } from 'lucide-react';
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 
+import { useCustomersQuery, useObjectsQuery } from '@/entities/business/api/business-queries';
 import { useEstimatesQuery } from '@/entities/estimate/api/estimate-queries';
-import type { Estimate } from '@/entities/estimate/model/types';
+import type { Estimate, EstimateStatus } from '@/entities/estimate/model/types';
 import { CreateEstimateForm } from '@/features/create-estimate/ui/CreateEstimateForm';
 import { DeleteEstimateButton } from '@/features/delete-estimate/ui/DeleteEstimateButton';
 import { useTranslation } from '@/shared/i18n/use-translation';
@@ -13,8 +14,28 @@ import { Button } from '@/shared/ui/button';
 export function EstimatesPage() {
   const { locale, t } = useTranslation();
   const navigate = useNavigate();
-  const [isCreateFormOpen, setIsCreateFormOpen] = useState(false);
-  const estimatesQuery = useEstimatesQuery();
+  const [searchParams] = useSearchParams();
+  const [isCreateFormOpen, setIsCreateFormOpen] = useState(
+    searchParams.get('create') === 'estimate',
+  );
+  const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<EstimateStatus | ''>('');
+  const [customerId, setCustomerId] = useState('');
+  const [objectId, setObjectId] = useState('');
+  const estimatesQuery = useEstimatesQuery({
+    customerId: customerId || undefined,
+    objectId: objectId || undefined,
+    search: search || undefined,
+    status: status || undefined,
+  });
+  const customersQuery = useCustomersQuery();
+  const objectsQuery = useObjectsQuery(customerId || undefined);
+
+  useEffect(() => {
+    if (searchParams.get('create') === 'estimate') {
+      setIsCreateFormOpen(true);
+    }
+  }, [searchParams]);
 
   const openCreatedEstimate = (estimate: Estimate) => {
     setIsCreateFormOpen(false);
@@ -50,15 +71,68 @@ export function EstimatesPage() {
         aria-labelledby="estimate-list-title"
         className="overflow-hidden rounded-xl border border-border bg-card shadow-sm"
       >
-        <div className="flex items-center justify-between border-b border-border px-5 py-4">
-          <h2 className="font-semibold" id="estimate-list-title">
-            {t('estimates.list.title')}
-          </h2>
-          {estimatesQuery.data ? (
-            <span className="text-sm text-muted-foreground">
-              {t('estimates.list.count', { count: estimatesQuery.data.totalCount })}
-            </span>
-          ) : null}
+        <div className="border-b border-border px-5 py-4">
+          <div className="flex items-center justify-between gap-4">
+            <h2 className="font-semibold" id="estimate-list-title">
+              {t('estimates.list.title')}
+            </h2>
+            {estimatesQuery.data ? (
+              <span className="text-sm text-muted-foreground">
+                {t('estimates.list.count', { count: estimatesQuery.data.totalCount })}
+              </span>
+            ) : null}
+          </div>
+          <div className="mt-4 grid gap-2 lg:grid-cols-4">
+            <input
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder={t('estimates.filters.search')}
+              value={search}
+            />
+            <select
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              onChange={(event) => setStatus(event.target.value as EstimateStatus | '')}
+              value={status}
+            >
+              <option value="">{t('estimates.filters.allStatuses')}</option>
+              {(['Draft', 'InProgress', 'Sent', 'Approved', 'Completed', 'Archived'] as const).map(
+                (item) => (
+                  <option key={item} value={item}>
+                    {t(`estimates.status.${item}`)}
+                  </option>
+                ),
+              )}
+            </select>
+            <select
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              disabled={customersQuery.isPending}
+              onChange={(event) => {
+                setCustomerId(event.target.value);
+                setObjectId('');
+              }}
+              value={customerId}
+            >
+              <option value="">{t('estimates.filters.allCustomers')}</option>
+              {(customersQuery.data?.items ?? []).map((customer) => (
+                <option key={customer.id} value={customer.id}>
+                  {customer.name}
+                </option>
+              ))}
+            </select>
+            <select
+              className="h-10 rounded-md border border-input bg-background px-3 text-sm outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              disabled={objectsQuery.isPending}
+              onChange={(event) => setObjectId(event.target.value)}
+              value={objectId}
+            >
+              <option value="">{t('estimates.filters.allObjects')}</option>
+              {(objectsQuery.data?.items ?? []).map((estimateObject) => (
+                <option key={estimateObject.id} value={estimateObject.id}>
+                  {estimateObject.name}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {estimatesQuery.isPending ? (
@@ -108,12 +182,12 @@ export function EstimatesPage() {
           <ul className="divide-y divide-border">
             {estimatesQuery.data.items.map((estimate) => {
               const formattedArea =
-                estimate.totalArea == null
+                estimate.object.totalArea == null
                   ? null
                   : t('estimateDetails.objectArea', {
                       area: new Intl.NumberFormat(locale, {
                         maximumFractionDigits: 2,
-                      }).format(estimate.totalArea),
+                      }).format(estimate.object.totalArea),
                     });
 
               return (
@@ -129,8 +203,11 @@ export function EstimatesPage() {
                       </span>
                     </div>
                     <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-sm text-muted-foreground">
-                      <span>{t(`estimates.objectTypes.${estimate.objectType}`)}</span>
-                      {estimate.objectAddress ? <span>{estimate.objectAddress}</span> : null}
+                      <span>{estimate.object.customerName}</span>
+                      <span>{estimate.object.name}</span>
+                      <span>{t(`estimates.status.${estimate.status}`)}</span>
+                      <span>{t(`estimates.objectTypes.${estimate.object.objectType}`)}</span>
+                      {estimate.object.address ? <span>{estimate.object.address}</span> : null}
                       {formattedArea ? <span>{formattedArea}</span> : null}
                       <span>{formatDate(estimate.createdAt, locale)}</span>
                     </div>

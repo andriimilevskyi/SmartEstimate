@@ -14,5 +14,9 @@ public sealed class GetEstimatesQueryValidator : AbstractValidator<GetEstimatesQ
 
         RuleFor(query => query.PageSize)
             .InclusiveBetween(1, 100);
+
+        RuleFor(query => query.Search)
+            .MaximumLength(256)
+            .When(query => query.Search is not null);
     }
 }

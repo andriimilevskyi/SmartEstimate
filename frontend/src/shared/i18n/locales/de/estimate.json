@@ -16,16 +16,42 @@
     "unavailableDescription": "Prüfen Sie die Verbindung und versuchen Sie es erneut.",
     "unavailableTitle": "Kostenvoranschlag ist nicht verfügbar"
   },
+  "estimateDocuments": {
+    "description": "Erstellen Sie ein professionelles PDF-Dokument zur Vorschau, Freigabe oder Übergabe an den Kunden.",
+    "download": "PDF herunterladen",
+    "loading": "Vorlagen werden geladen...",
+    "messages": {
+      "downloadError": "Das PDF konnte nicht heruntergeladen werden. Bitte versuchen Sie es erneut.",
+      "previewError": "Die PDF-Vorschau konnte nicht geöffnet werden."
+    },
+    "preview": "Vorschau",
+    "template": "PDF-Vorlage",
+    "title": "Dokumente",
+    "unavailable": "Dokumentvorlagen sind derzeit nicht verfügbar."
+  },
   "estimateEditor": {
     "catalog": {
       "add": "Position hinzufügen",
+      "addMaterial": "Material hinzufügen",
+      "addMultiple": "Mehrere hinzufügen",
+      "addSelected": "Ausgewählte hinzufügen",
+      "addWork": "Arbeit hinzufügen",
       "allCategories": "Alle Kategorien",
       "category": "Arbeitskategorie",
       "constructionWork": "Bauarbeit",
+      "empty": "Keine Positionen zu dieser Suche gefunden.",
+      "error": "Katalog oder Preise sind derzeit nicht verfügbar.",
+      "hide": "Ausblenden",
+      "loading": "Katalog wird geladen...",
       "material": "Material",
+      "priceFromPricing": "Das Backend speichert beim Hinzufügen den Pricing-Snapshot.",
+      "priceMissing": "Kein Preis vorhanden. Manuell eingeben oder mit Nullpreis hinzufügen.",
+      "recommended": "Für Zone empfohlen",
       "search": "Schnellsuche",
       "searchPlaceholder": "Zum Beispiel: Spachteln, Fliesen, Kabel...",
       "selectItem": "Position auswählen",
+      "selectedCount_one": "Ausgewählt: {{count}} Position",
+      "selectedCount_other": "Ausgewählt: {{count}} Positionen",
       "title": "Positionskatalog",
       "unit": "Maßeinheit",
       "unitPlaceholder": "Position auswählen",
@@ -35,6 +61,7 @@
     "item": {
       "delete": "Entfernen",
       "deleteConfirmation": "Diese Position aus dem Kostenvoranschlag entfernen?",
+      "deleteTitle": "Position entfernen",
       "duplicate": "Duplizieren",
       "lineTotal": "Zeilensumme",
       "notes": "Kommentar",
@@ -43,7 +70,8 @@
       "saving": "Speichern...",
       "unitPrice": "Einheitspreis"
     },
-    "itemCount": "{{count}} Positionen",
+    "itemCount_one": "{{count}} Position",
+    "itemCount_other": "{{count}} Positionen",
     "materialItems": {
       "empty": "Fügen Sie zunächst ein Material aus dem Katalog hinzu.",
       "title": "Materialpositionen"
@@ -51,6 +79,9 @@
     "messages": {
       "added": "Position wurde zum Kostenvoranschlag hinzugefügt.",
       "addError": "Die Position konnte nicht hinzugefügt werden. Bitte versuchen Sie es erneut.",
+      "addValidationError": "Wählen Sie eine Position aus und geben Sie Menge und Preis korrekt ein.",
+      "batchAdded_one": "{{count}} Position hinzugefügt.",
+      "batchAdded_other": "{{count}} Positionen hinzugefügt.",
       "deleted": "Position wurde aus dem Kostenvoranschlag entfernt.",
       "deleteError": "Die Position konnte nicht entfernt werden. Bitte versuchen Sie es erneut.",
       "duplicated": "Position wurde dupliziert.",
@@ -76,9 +107,12 @@
       "current": "Zone",
       "delete": "Zone löschen",
       "deleteConfirmation": "Diese Zone zusammen mit ihren Arbeiten und Materialien löschen?",
+      "deleteTitle": "Zone löschen",
       "moveDown": "Nach unten verschieben",
       "moveUp": "Nach oben verschieben",
-      "newName": "Name der neuen Zone"
+      "newDescription": "Geben Sie den Namen der Zone ein, die zum Kostenvoranschlag hinzugefügt werden soll.",
+      "newName": "Name der neuen Zone",
+      "newTitle": "Neue Zone"
     }
   },
   "estimates": {
@@ -88,7 +122,8 @@
       "cancel": "Abbrechen",
       "decreaseZone": "Zonenanzahl verringern",
       "description": "Erstellen Sie die Struktur rund um das reale Objekt: Typ, Fläche, Adresse und Arbeitszonen.",
-      "futureZones": "Zu erstellende Zonen: {{count}}",
+      "futureZones_one": "{{count}} Zone wird erstellt",
+      "futureZones_other": "{{count}} Zonen werden erstellt",
       "increaseZone": "Zonenanzahl erhöhen",
       "next": "Zonen konfigurieren",
       "noZones": "Wählen Sie mindestens eine Zone für den Kostenvoranschlag.",
@@ -98,22 +133,44 @@
       "title": "Kostenvoranschlag erstellen",
       "zoneDraftNotice": "Konfigurieren Sie die zukünftige Objektstruktur. Es wurden noch keine Zonen erstellt; sie werden erst nach Klick auf Kostenvoranschlag erstellen gespeichert."
     },
+    "deletedState": {
+      "badge": "Gelöscht",
+      "description": "Dieser Kostenvoranschlag wurde bereits aus dem normalen Arbeitsablauf entfernt. Sie können ihn endgültig löschen, wenn er nicht mehr benötigt wird.",
+      "title": "Kostenvoranschlag gelöscht"
+    },
     "delete": {
       "action": "Löschen",
-      "confirmation": "Diesen Kostenvoranschlag löschen? Er ist danach im Arbeitsbereich nicht mehr verfügbar."
+      "confirmation": "Diesen Kostenvoranschlag löschen? Er ist danach im Arbeitsbereich nicht mehr verfügbar.",
+      "title": "Kostenvoranschlag löschen"
     },
     "description": "Erstellen und prüfen Sie die ersten Kostenvoranschläge in Ihrem Arbeitsbereich.",
     "eyebrow": "Sprint 1",
+    "filters": {
+      "allCustomers": "Alle Kunden",
+      "allObjects": "Alle Objekte",
+      "allStatuses": "Alle Status",
+      "search": "Suche nach Kunde, Objekt oder Adresse"
+    },
     "form": {
       "currency": "Währung",
       "currencyPlaceholder": "UAH",
+      "customerEmail": "Kunden-E-Mail",
+      "customerName": "Kundenname",
+      "customerNote": "Kundennotiz",
+      "customerPhone": "Kundentelefon",
+      "existingObject": "Bestehendes Objekt",
+      "newObject": "Neues Objekt",
       "notes": "Notiz",
       "notesPlaceholder": "Notiz zu diesem Kostenvoranschlag hinzufügen",
       "number": "Nummer des Kostenvoranschlags",
       "numberPlaceholder": "EST-001",
+      "object": "Objekt",
       "objectAddress": "Objektadresse",
       "objectAddressPlaceholder": "Kyiv, Velyka Vasylkivska Str. 72",
+      "objectDescription": "Objektbeschreibung",
+      "objectName": "Objektname",
       "objectType": "Objekttyp",
+      "selectObject": "Objekt auswählen",
       "totalArea": "Gesamtfläche, m²",
       "totalAreaPlaceholder": "86.5"
     },
@@ -125,7 +182,15 @@
       "created": "Kostenvoranschlag wurde erstellt.",
       "createError": "Der Kostenvoranschlag konnte nicht erstellt werden. Bitte versuchen Sie es erneut.",
       "deleted": "Kostenvoranschlag wurde gelöscht.",
-      "deleteError": "Der Kostenvoranschlag konnte nicht gelöscht werden. Bitte versuchen Sie es erneut."
+      "deleteError": "Der Kostenvoranschlag konnte nicht gelöscht werden. Bitte versuchen Sie es erneut.",
+      "permanentlyDeleted": "Kostenvoranschlag wurde endgültig gelöscht.",
+      "permanentDeleteError": "Der Kostenvoranschlag konnte nicht endgültig gelöscht werden."
+    },
+    "permanentDelete": {
+      "action": "Endgültig löschen",
+      "confirmation": "Diesen Kostenvoranschlag endgültig löschen?",
+      "description": "Der Kostenvoranschlag wird endgültig gelöscht. Diese Aktion kann nicht rückgängig gemacht werden.",
+      "warning": "Diese Aktion kann nicht rückgängig gemacht werden."
     },
     "objectTypes": {
       "Apartment": "Wohnung",
@@ -146,10 +211,19 @@
       "loading": "Kostenvoranschläge werden geladen...",
       "retry": "Erneut versuchen"
     },
+    "status": {
+      "Approved": "Genehmigt",
+      "Archived": "Archiv",
+      "Completed": "Abgeschlossen",
+      "Draft": "Entwurf",
+      "InProgress": "In Arbeit",
+      "Sent": "Gesendet"
+    },
     "title": "Kostenvoranschläge",
     "validation": {
       "currency": "Verwenden Sie einen ISO-Währungscode, zum Beispiel UAH.",
       "number": "Geben Sie eine Nummer oder einen Titel ein.",
+      "object": "Wählen Sie ein Objekt aus oder erstellen Sie ein neues.",
       "zones": "Fügen Sie mindestens eine Renovierungszone hinzu."
     },
     "zones": {
@@ -185,6 +259,81 @@
       "utilityRoom": "Hauswirtschaftsraum",
       "wardrobe": "Garderobe",
       "warehouse": "Lagerbereich"
+    }
+  },
+  "objects": {
+    "actions": {
+      "archive": "Archivieren",
+      "archived": "Archiviert",
+      "deletePermanently": "Endgültig löschen",
+      "edit": "Bearbeiten",
+      "restore": "Wiederherstellen"
+    },
+    "createdAt": "Erstellt",
+    "customerInfo": "Kunde",
+    "estimateCount": "Kostenvoranschläge",
+    "estimates": "Kostenvoranschläge",
+    "eyebrow": "Objekt",
+    "noEstimates": "Für dieses Objekt gibt es noch keine Kostenvoranschläge.",
+    "objectInfo": "Objektinformationen",
+    "updatedAt": "Zuletzt aktualisiert",
+    "backToList": "Zurück zu Objekten",
+    "create": {
+      "action": "Objekt erstellen",
+      "cancel": "Abbrechen",
+      "submit": "Objekt erstellen",
+      "title": "Neues Objekt"
+    },
+    "delete": {
+      "confirmation": "Dieses Objekt endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "title": "Objekt löschen"
+    },
+    "description": "Objekte verbinden Kunden mit zukünftigen und bestehenden Kostenvoranschlägen.",
+    "edit": {
+      "submit": "Änderungen speichern",
+      "title": "Objekt bearbeiten"
+    },
+    "filters": {
+      "active": "Aktiv",
+      "all": "Alle",
+      "allCustomers": "Alle Kunden",
+      "archived": "Archiviert"
+    },
+    "form": {
+      "address": "Adresse",
+      "customer": "Kunde auswählen",
+      "description": "Beschreibung",
+      "name": "Objektname",
+      "totalArea": "Fläche, m²"
+    },
+    "messages": {
+      "archiveError": "Objekt konnte nicht archiviert werden.",
+      "archived": "Objekt archiviert.",
+      "created": "Objekt erstellt.",
+      "createError": "Objekt konnte nicht erstellt werden.",
+      "deleted": "Objekt endgültig gelöscht.",
+      "deleteError": "Objekt konnte nicht gelöscht werden.",
+      "restored": "Objekt wiederhergestellt.",
+      "restoreError": "Objekt konnte nicht wiederhergestellt werden.",
+      "updated": "Objekt aktualisiert.",
+      "updateError": "Objekt konnte nicht aktualisiert werden."
+    },
+    "search": "Suche nach Name, Adresse oder Kunde",
+    "states": {
+      "emptyAllDescription": "Es wurden noch keine Objekte erstellt.",
+      "emptyAllTitle": "Objektliste ist leer",
+      "emptyArchivedDescription": "Archivierte Objekte erscheinen hier.",
+      "emptyArchivedTitle": "Archiv ist leer",
+      "emptyDescription": "Erstellen Sie das erste Objekt oder legen Sie es beim Erstellen eines Kostenvoranschlags an.",
+      "emptyTitle": "Noch keine Objekte",
+      "error": "Objekte sind derzeit nicht verfügbar.",
+      "loading": "Objekte werden geladen...",
+      "unavailableDescription": "Das Objekt wurde möglicherweise gelöscht oder ist nicht verfügbar.",
+      "unavailableTitle": "Objekt nicht verfügbar"
+    },
+    "title": "Objekte",
+    "validation": {
+      "required": "Wählen Sie einen Kunden und geben Sie den Objektnamen ein."
     }
   }
 }

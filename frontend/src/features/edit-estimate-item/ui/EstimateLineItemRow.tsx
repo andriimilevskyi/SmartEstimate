@@ -1,4 +1,5 @@
 import { Copy, LoaderCircle, Trash2 } from 'lucide-react';
+import { useState } from 'react';
 import { toast } from 'sonner';
 
 import {
@@ -14,6 +15,7 @@ import {
 import { useTranslation } from '@/shared/i18n/use-translation';
 import { formatMoney } from '@/shared/lib/formatters';
 import { Button } from '@/shared/ui/button';
+import { ConfirmationDialog } from '@/shared/ui/confirmation-dialog';
 
 interface EstimateLineItemRowProps {
   currency: string;
@@ -45,6 +47,7 @@ export function EstimateLineItemRow({
   const updateMutation = useUpdateEstimateItem(estimateId, kind);
   const deleteMutation = useDeleteEstimateItem(estimateId, kind);
   const duplicateMutation = useDuplicateEstimateItem(estimateId, kind);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const values = draft ?? createEstimateLineItemDraft(item);
   const quantity = Number(values.quantity);
   const unitPrice = Number(values.unitPrice);
@@ -91,16 +94,13 @@ export function EstimateLineItemRow({
   };
 
   const remove = () => {
-    if (!window.confirm(t('estimateEditor.item.deleteConfirmation'))) {
-      return;
-    }
-
     deleteMutation.mutate(item.id, {
       onError: () => {
         toast.error(t('estimateEditor.messages.deleteError'));
       },
       onSuccess: () => {
         toast.success(t('estimateEditor.messages.deleted'));
+        setIsDeleteOpen(false);
         onDraftClear();
       },
     });
@@ -218,7 +218,7 @@ export function EstimateLineItemRow({
         <Button
           aria-label={t('estimateEditor.item.delete')}
           disabled={isSaving}
-          onClick={remove}
+          onClick={() => setIsDeleteOpen(true)}
           size="sm"
           type="button"
           variant="ghost"
@@ -231,6 +231,17 @@ export function EstimateLineItemRow({
           <span className="sr-only sm:not-sr-only">{t('estimateEditor.item.delete')}</span>
         </Button>
       </div>
+      <ConfirmationDialog
+        cancelLabel={t('actions.cancel')}
+        confirmLabel={t('estimateEditor.item.delete')}
+        description={t('estimateEditor.item.deleteConfirmation')}
+        isLoading={deleteMutation.isPending}
+        isOpen={isDeleteOpen}
+        onCancel={() => setIsDeleteOpen(false)}
+        onConfirm={remove}
+        title={t('estimateEditor.item.deleteTitle')}
+        variant="destructive"
+      />
     </li>
   );
 }

@@ -9,8 +9,8 @@ export function useDeleteEstimate() {
     mutationFn: deleteEstimate,
     onSuccess: async (_, id) => {
       await Promise.all([
-        queryClient.invalidateQueries({ queryKey: estimateQueryKeys.list() }),
-        queryClient.removeQueries({ queryKey: estimateQueryKeys.detail(id) }),
+        queryClient.invalidateQueries({ queryKey: estimateQueryKeys.all }),
+        queryClient.invalidateQueries({ queryKey: [...estimateQueryKeys.all, 'detail', id] }),
       ]);
     },
   });

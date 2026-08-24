@@ -7,7 +7,12 @@ import {
   type EstimateLineItemDraft,
   type EstimateLineItemDrafts,
 } from '@/entities/estimate/model/calculations';
-import type { Estimate, EstimateItemKind, EstimateLineItem, EstimateZone } from '@/entities/estimate/model/types';
+import type {
+  Estimate,
+  EstimateItemKind,
+  EstimateLineItem,
+  EstimateZone,
+} from '@/entities/estimate/model/types';
 import { AddEstimateItemForm } from '@/features/add-estimate-item/ui/AddEstimateItemForm';
 import { EstimateLineItemRow } from '@/features/edit-estimate-item/ui/EstimateLineItemRow';
 import {
@@ -19,6 +24,8 @@ import {
 import { useTranslation } from '@/shared/i18n/use-translation';
 import { formatMoney } from '@/shared/lib/formatters';
 import { Button } from '@/shared/ui/button';
+import { ConfirmationDialog } from '@/shared/ui/confirmation-dialog';
+import { TextInputDialog } from '@/shared/ui/text-input-dialog';
 
 interface EstimateItemsSectionProps {
   currency: string;
@@ -28,6 +35,8 @@ interface EstimateItemsSectionProps {
   kind: EstimateItemKind;
   onDraftChange: (itemId: string, draft: EstimateLineItemDraft) => void;
   onDraftClear: (itemId: string) => void;
+  zoneId: string;
+  zoneName: string;
 }
 
 function EstimateItemsSection({
@@ -38,6 +47,8 @@ function EstimateItemsSection({
   kind,
   onDraftChange,
   onDraftClear,
+  zoneId,
+  zoneName,
 }: EstimateItemsSectionProps) {
   const { t } = useTranslation();
   const isWork = kind === 'work';
@@ -54,6 +65,16 @@ function EstimateItemsSection({
         <span className="text-xs font-normal text-muted-foreground">
           {t('estimateEditor.itemCount', { count: items.length })}
         </span>
+      </div>
+
+      <div className="mb-3">
+        <AddEstimateItemForm
+          currency={currency}
+          estimateId={estimateId}
+          kind={kind}
+          zoneId={zoneId}
+          zoneName={zoneName}
+        />
       </div>
 
       {items.length === 0 ? (
@@ -127,9 +148,10 @@ function ZoneSection({
 
   return (
     <section
-      className={`rounded-xl border bg-card shadow-sm ${
+      className={`scroll-mt-24 rounded-xl border bg-card shadow-sm ${
         isSelected ? 'border-primary/60 ring-2 ring-primary/10' : 'border-border'
       }`}
+      id={`estimate-zone-${zone.id}`}
       onFocus={() => onSelect(zone.id)}
     >
       <div className="flex flex-col gap-4 border-b border-border p-4 xl:flex-row xl:items-center xl:justify-between">
@@ -144,11 +166,15 @@ function ZoneSection({
         <div className="grid gap-3 text-sm sm:grid-cols-3 xl:min-w-[27rem]">
           <div>
             <p className="text-xs text-muted-foreground">{t('estimateDetails.laborTotal')}</p>
-            <p className="font-semibold tabular-nums">{formatMoney(zone.totalLabor, currency, locale)}</p>
+            <p className="font-semibold tabular-nums">
+              {formatMoney(zone.totalLabor, currency, locale)}
+            </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">{t('estimateDetails.materialsTotal')}</p>
-            <p className="font-semibold tabular-nums">{formatMoney(zone.totalMaterials, currency, locale)}</p>
+            <p className="font-semibold tabular-nums">
+              {formatMoney(zone.totalMaterials, currency, locale)}
+            </p>
           </div>
           <div>
             <p className="text-xs text-muted-foreground">{t('estimateDetails.grandTotal')}</p>
@@ -158,13 +184,31 @@ function ZoneSection({
           </div>
         </div>
         <div className="flex items-center gap-1">
-          <Button aria-label={t('estimateEditor.zone.moveUp')} onClick={() => onMoveZone(zone.id, 'up')} size="icon" type="button" variant="ghost">
+          <Button
+            aria-label={t('estimateEditor.zone.moveUp')}
+            onClick={() => onMoveZone(zone.id, 'up')}
+            size="icon"
+            type="button"
+            variant="ghost"
+          >
             <ArrowUp aria-hidden="true" className="size-4" />
           </Button>
-          <Button aria-label={t('estimateEditor.zone.moveDown')} onClick={() => onMoveZone(zone.id, 'down')} size="icon" type="button" variant="ghost">
+          <Button
+            aria-label={t('estimateEditor.zone.moveDown')}
+            onClick={() => onMoveZone(zone.id, 'down')}
+            size="icon"
+            type="button"
+            variant="ghost"
+          >
             <ArrowDown aria-hidden="true" className="size-4" />
           </Button>
-          <Button aria-label={t('estimateEditor.zone.delete')} onClick={() => onRemoveZone(zone.id)} size="icon" type="button" variant="ghost">
+          <Button
+            aria-label={t('estimateEditor.zone.delete')}
+            onClick={() => onRemoveZone(zone.id)}
+            size="icon"
+            type="button"
+            variant="ghost"
+          >
             <Trash2 aria-hidden="true" className="size-4" />
           </Button>
         </div>
@@ -179,6 +223,8 @@ function ZoneSection({
           kind="work"
           onDraftChange={onDraftChange}
           onDraftClear={onDraftClear}
+          zoneId={zone.id}
+          zoneName={zone.name}
         />
         <EstimateItemsSection
           currency={currency}
@@ -188,6 +234,8 @@ function ZoneSection({
           kind="material"
           onDraftChange={onDraftChange}
           onDraftClear={onDraftClear}
+          zoneId={zone.id}
+          zoneName={zone.name}
         />
       </div>
     </section>
@@ -202,7 +250,10 @@ function EstimateTotals({ estimate }: EstimateTotalsProps) {
   const { locale, t } = useTranslation();
 
   return (
-    <aside aria-labelledby="estimate-totals-title" className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <aside
+      aria-labelledby="estimate-totals-title"
+      className="rounded-xl border border-border bg-card p-5 shadow-sm"
+    >
       <div className="flex items-center gap-3">
         <div className="rounded-lg bg-primary/10 p-2 text-primary">
           <Calculator aria-hidden="true" className="size-5" />
@@ -250,6 +301,8 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
   const [drafts, setDrafts] = useState<EstimateLineItemDrafts>({});
   const zones = [...estimate.zones].sort((left, right) => left.sortOrder - right.sortOrder);
   const [selectedZoneId, setSelectedZoneId] = useState(zones[0]?.id ?? '');
+  const [isAddZoneOpen, setIsAddZoneOpen] = useState(false);
+  const [zoneIdPendingDelete, setZoneIdPendingDelete] = useState<string | null>(null);
   const displayedEstimate = useMemo(
     () => applyEstimateLineItemDrafts(estimate, drafts),
     [drafts, estimate],
@@ -282,17 +335,15 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
     });
   };
 
-  const addZone = () => {
-    const name = window.prompt(t('estimateEditor.zone.newName'));
-    if (!name?.trim()) {
-      return;
-    }
-
-    addZoneMutation.mutate(name.trim(), {
+  const addZone = (name: string) => {
+    addZoneMutation.mutate(name, {
       onError: () => toast.error(t('estimateEditor.messages.zoneError')),
       onSuccess: (updatedEstimate) => {
-        const createdZone = [...updatedEstimate.zones].sort((left, right) => right.sortOrder - left.sortOrder)[0];
+        const createdZone = [...updatedEstimate.zones].sort(
+          (left, right) => right.sortOrder - left.sortOrder,
+        )[0];
         setSelectedZoneId(createdZone.id);
+        setIsAddZoneOpen(false);
       },
     });
   };
@@ -314,38 +365,40 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
     const nextZones = [...zones];
     const [zone] = nextZones.splice(currentIndex, 1);
     nextZones.splice(nextIndex, 0, zone);
-    reorderZonesMutation.mutate(nextZones.map((nextZone) => nextZone.id), {
-      onError: () => toast.error(t('estimateEditor.messages.zoneError')),
-    });
+    reorderZonesMutation.mutate(
+      nextZones.map((nextZone) => nextZone.id),
+      {
+        onError: () => toast.error(t('estimateEditor.messages.zoneError')),
+      },
+    );
   };
 
   const removeZone = (zoneId: string) => {
-    if (!window.confirm(t('estimateEditor.zone.deleteConfirmation'))) {
-      return;
-    }
-
     deleteZoneMutation.mutate(zoneId, {
       onError: () => toast.error(t('estimateEditor.messages.zoneError')),
+      onSuccess: () => setZoneIdPendingDelete(null),
+    });
+  };
+
+  const scrollToZone = (zoneId: string) => {
+    setSelectedZoneId(zoneId);
+    requestAnimationFrame(() => {
+      document.getElementById(`estimate-zone-${zoneId}`)?.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
     });
   };
 
   return (
-    <div className="grid gap-6 2xl:grid-cols-[minmax(18rem,0.72fr)_minmax(0,1.8fr)_minmax(16rem,0.62fr)]">
-      <AddEstimateItemForm
-        currency={estimate.currency}
-        estimateId={estimate.id}
-        onZoneChange={setSelectedZoneId}
-        selectedZoneId={selectedZoneId}
-        zones={zones}
-      />
-
+    <div className="grid gap-6 2xl:grid-cols-[minmax(0,1.8fr)_minmax(16rem,0.62fr)]">
       <div className="min-w-0 space-y-4">
         <div className="flex flex-wrap items-center gap-2">
           {zones.map((zone) => (
             <Button
               aria-pressed={zone.id === selectedZoneId}
               key={zone.id}
-              onClick={() => setSelectedZoneId(zone.id)}
+              onClick={() => scrollToZone(zone.id)}
               size="sm"
               type="button"
               variant={zone.id === selectedZoneId ? 'secondary' : 'outline'}
@@ -353,7 +406,7 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
               {zone.name}
             </Button>
           ))}
-          <Button onClick={addZone} size="sm" type="button" variant="outline">
+          <Button onClick={() => setIsAddZoneOpen(true)} size="sm" type="button" variant="outline">
             <Plus aria-hidden="true" className="size-4" />
             {t('estimateEditor.zone.add')}
           </Button>
@@ -371,7 +424,7 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
               onDraftChange={updateDraft}
               onDraftClear={clearDraft}
               onMoveZone={moveZone}
-              onRemoveZone={removeZone}
+              onRemoveZone={setZoneIdPendingDelete}
               onRenameZone={renameZone}
               onSelect={setSelectedZoneId}
               zone={zone}
@@ -380,6 +433,32 @@ export function EstimateEditor({ estimate }: EstimateEditorProps) {
       </div>
 
       <EstimateTotals estimate={displayedEstimate} />
+      <TextInputDialog
+        cancelLabel={t('actions.cancel')}
+        confirmLabel={t('estimateEditor.zone.add')}
+        description={t('estimateEditor.zone.newDescription')}
+        inputLabel={t('estimateEditor.zone.newName')}
+        isLoading={addZoneMutation.isPending}
+        isOpen={isAddZoneOpen}
+        onCancel={() => setIsAddZoneOpen(false)}
+        onConfirm={addZone}
+        title={t('estimateEditor.zone.newTitle')}
+      />
+      <ConfirmationDialog
+        cancelLabel={t('actions.cancel')}
+        confirmLabel={t('estimateEditor.zone.delete')}
+        description={t('estimateEditor.zone.deleteConfirmation')}
+        isLoading={deleteZoneMutation.isPending}
+        isOpen={zoneIdPendingDelete !== null}
+        onCancel={() => setZoneIdPendingDelete(null)}
+        onConfirm={() => {
+          if (zoneIdPendingDelete) {
+            removeZone(zoneIdPendingDelete);
+          }
+        }}
+        title={t('estimateEditor.zone.deleteTitle')}
+        variant="destructive"
+      />
     </div>
   );
 }

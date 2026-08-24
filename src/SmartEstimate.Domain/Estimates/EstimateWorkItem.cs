@@ -21,7 +21,12 @@ public sealed class EstimateWorkItem
         Money unitPrice,
         string? notes,
         DateTimeOffset createdAt,
-        string? knowledgeItemId)
+        string? knowledgeItemId,
+        LocalizedNameSnapshot? nameSnapshot,
+        EstimateItemNameSource nameSource,
+        Guid? sourcePriceId,
+        DateTimeOffset? priceCapturedAt,
+        bool isUnitPriceManuallyOverridden)
     {
         if (id == Guid.Empty)
         {
@@ -42,6 +47,11 @@ public sealed class EstimateWorkItem
         UnitPrice = unitPrice ?? throw new ArgumentNullException(nameof(unitPrice));
         Notes = NormalizeNotes(notes);
         KnowledgeItemId = NormalizeKnowledgeItemId(knowledgeItemId);
+        NameSnapshot = nameSnapshot;
+        NameSource = NormalizeNameSource(nameSource, nameSnapshot);
+        SourcePriceId = sourcePriceId == Guid.Empty ? null : sourcePriceId;
+        PriceCapturedAt = priceCapturedAt;
+        IsUnitPriceManuallyOverridden = isUnitPriceManuallyOverridden;
         CreatedAt = createdAt;
         UpdatedAt = createdAt;
     }
@@ -68,6 +78,19 @@ public sealed class EstimateWorkItem
     /// </summary>
     public string? KnowledgeItemId { get; private set; }
 
+    public LocalizedNameSnapshot? NameSnapshot { get; private set; }
+
+    public EstimateItemNameSource NameSource { get; private set; } = EstimateItemNameSource.Legacy;
+
+    /// <summary>
+    /// Optional Pricing catalog price used when the line was created. The amount is still stored as a snapshot.
+    /// </summary>
+    public Guid? SourcePriceId { get; private set; }
+
+    public DateTimeOffset? PriceCapturedAt { get; private set; }
+
+    public bool IsUnitPriceManuallyOverridden { get; private set; }
+
     public DateTimeOffset CreatedAt { get; private set; }
 
     public DateTimeOffset UpdatedAt { get; private set; }
@@ -78,6 +101,11 @@ public sealed class EstimateWorkItem
 
     internal void Update(Quantity quantity, Money unitPrice, string? notes, DateTimeOffset updatedAt)
     {
+        if (UnitPrice.Amount != unitPrice.Amount || UnitPrice.Currency != unitPrice.Currency)
+        {
+            IsUnitPriceManuallyOverridden = true;
+        }
+
         Quantity = quantity ?? throw new ArgumentNullException(nameof(quantity));
         UnitPrice = unitPrice ?? throw new ArgumentNullException(nameof(unitPrice));
         Notes = NormalizeNotes(notes);
@@ -89,12 +117,17 @@ public sealed class EstimateWorkItem
         EstimateId,
         ZoneId,
         Name,
-        Quantity,
-        MeasurementUnit,
-        UnitPrice,
+        new Quantity(Quantity.Value),
+        new MeasurementUnit(MeasurementUnit.Value),
+        new Money(UnitPrice.Amount, UnitPrice.Currency),
         Notes,
         createdAt,
-        KnowledgeItemId);
+        KnowledgeItemId,
+        DuplicateSnapshot(NameSnapshot),
+        NameSource,
+        SourcePriceId,
+        PriceCapturedAt,
+        IsUnitPriceManuallyOverridden);
 
     private static string NormalizeName(string name)
     {
@@ -145,4 +178,19 @@ public sealed class EstimateWorkItem
 
         return normalized;
     }
+
+    private static EstimateItemNameSource NormalizeNameSource(
+        EstimateItemNameSource nameSource,
+        LocalizedNameSnapshot? nameSnapshot)
+    {
+        if (nameSource == EstimateItemNameSource.KnowledgeSnapshot && nameSnapshot is null)
+        {
+            throw new ArgumentException("A localized name snapshot is required for catalog-derived work items.", nameof(nameSource));
+        }
+
+        return nameSource;
+    }
+
+    private static LocalizedNameSnapshot? DuplicateSnapshot(LocalizedNameSnapshot? snapshot) =>
+        snapshot is null ? null : new LocalizedNameSnapshot(snapshot.Uk, snapshot.En, snapshot.De);
 }

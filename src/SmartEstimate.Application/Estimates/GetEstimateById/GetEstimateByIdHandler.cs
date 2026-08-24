@@ -1,6 +1,6 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Shared.Primitives;
 
 namespace SmartEstimate.Application.Estimates.GetEstimateById;
@@ -11,11 +11,12 @@ namespace SmartEstimate.Application.Estimates.GetEstimateById;
 public sealed class GetEstimateByIdHandler(
     IEstimateRepository repository,
     IValidator<GetEstimateByIdQuery> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         GetEstimateByIdQuery query,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         ArgumentNullException.ThrowIfNull(query);
 
@@ -25,12 +26,12 @@ public sealed class GetEstimateByIdHandler(
             return Result<EstimateDetailsResponse>.Failure(EstimateErrors.Validation(validationResult));
         }
 
-        var estimate = await repository.GetByIdAsync(query.Id, cancellationToken);
+        var estimate = await repository.GetByIdIncludingDeletedAsync(query.Id, cancellationToken);
         if (estimate is null)
         {
             return Result<EstimateDetailsResponse>.Failure(EstimateErrors.NotFound(query.Id));
         }
 
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

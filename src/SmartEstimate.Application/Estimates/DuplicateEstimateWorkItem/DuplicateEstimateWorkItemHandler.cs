@@ -1,6 +1,6 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Shared.Primitives;
 
 namespace SmartEstimate.Application.Estimates.DuplicateEstimateWorkItem;
@@ -11,11 +11,12 @@ namespace SmartEstimate.Application.Estimates.DuplicateEstimateWorkItem;
 public sealed class DuplicateEstimateWorkItemHandler(
     IEstimateRepository repository,
     IValidator<DuplicateEstimateWorkItemCommand> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         DuplicateEstimateWorkItemCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         var validation = await validator.ValidateAsync(command, cancellationToken);
         if (!validation.IsValid)
@@ -36,6 +37,6 @@ public sealed class DuplicateEstimateWorkItemHandler(
 
         estimate.DuplicateWorkItem(command.ItemId, DateTimeOffset.UtcNow);
         await repository.SaveChangesAsync(cancellationToken);
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

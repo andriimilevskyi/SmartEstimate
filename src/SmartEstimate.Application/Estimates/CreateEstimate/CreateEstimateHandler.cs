@@ -1,6 +1,6 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Application.Business.Abstractions;
 using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Domain.Estimates.ValueObjects;
 using SmartEstimate.Shared.Primitives;
@@ -12,12 +12,14 @@ namespace SmartEstimate.Application.Estimates.CreateEstimate;
 /// </summary>
 public sealed class CreateEstimateHandler(
     IEstimateRepository repository,
+    IEstimateObjectRepository objects,
     IValidator<CreateEstimateCommand> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         CreateEstimateCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         ArgumentNullException.ThrowIfNull(command);
 
@@ -33,13 +35,16 @@ public sealed class CreateEstimateHandler(
             return Result<EstimateDetailsResponse>.Failure(EstimateErrors.Conflict(number.Value));
         }
 
+        if (await objects.GetByIdAsync(command.ObjectId, cancellationToken) is null)
+        {
+            return Result<EstimateDetailsResponse>.Failure(EstimateErrors.ObjectNotFound(command.ObjectId));
+        }
+
         var now = DateTimeOffset.UtcNow;
         var estimate = Estimate.Create(
             number,
+            command.ObjectId,
             command.Currency,
-            command.ObjectType,
-            command.ObjectAddress,
-            command.TotalArea,
             command.Notes,
             command.Zones,
             now);
@@ -69,6 +74,6 @@ public sealed class CreateEstimateHandler(
         await repository.AddAsync(estimate, cancellationToken);
         await repository.SaveChangesAsync(cancellationToken);
 
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

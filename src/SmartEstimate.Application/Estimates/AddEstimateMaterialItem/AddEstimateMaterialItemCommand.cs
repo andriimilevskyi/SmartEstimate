@@ -8,5 +8,5 @@ public sealed record AddEstimateMaterialItemCommand(
     Guid ZoneId,
     string MaterialId,
     decimal Quantity,
-    decimal UnitPrice,
+    decimal? UnitPrice,
     string? Notes);

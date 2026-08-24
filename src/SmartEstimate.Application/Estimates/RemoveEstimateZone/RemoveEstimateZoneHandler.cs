@@ -1,6 +1,6 @@
 using FluentValidation;
-using MapsterMapper;
 using SmartEstimate.Application.Abstractions.Persistence;
+using SmartEstimate.Domain.Estimates;
 using SmartEstimate.Shared.Primitives;
 
 namespace SmartEstimate.Application.Estimates.RemoveEstimateZone;
@@ -11,11 +11,12 @@ namespace SmartEstimate.Application.Estimates.RemoveEstimateZone;
 public sealed class RemoveEstimateZoneHandler(
     IEstimateRepository repository,
     IValidator<RemoveEstimateZoneCommand> validator,
-    IMapper mapper)
+    EstimateResponseFactory responseFactory)
 {
     public async Task<Result<EstimateDetailsResponse>> HandleAsync(
         RemoveEstimateZoneCommand command,
-        CancellationToken cancellationToken)
+        CancellationToken cancellationToken,
+        EstimateDisplayLocale locale = EstimateDisplayLocale.Uk)
     {
         var validation = await validator.ValidateAsync(command, cancellationToken);
         if (!validation.IsValid)
@@ -36,6 +37,6 @@ public sealed class RemoveEstimateZoneHandler(
 
         estimate.RemoveZone(command.ZoneId, DateTimeOffset.UtcNow);
         await repository.SaveChangesAsync(cancellationToken);
-        return Result<EstimateDetailsResponse>.Success(mapper.Map<EstimateDetailsResponse>(estimate));
+        return Result<EstimateDetailsResponse>.Success(await responseFactory.CreateDetailsAsync(estimate, locale, cancellationToken));
     }
 }

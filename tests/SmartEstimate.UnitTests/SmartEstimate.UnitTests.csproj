@@ -1,6 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net9.0</TargetFramework>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
   </PropertyGroup>
@@ -16,6 +17,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/SmartEstimate.Application/SmartEstimate.Application.csproj" />
+    <ProjectReference Include="../../src/SmartEstimate.Documents/SmartEstimate.Documents.csproj" />
     <ProjectReference Include="../../src/SmartEstimate.Domain/SmartEstimate.Domain.csproj" />
     <ProjectReference Include="../../src/SmartEstimate.Shared/SmartEstimate.Shared.csproj" />
   </ItemGroup>

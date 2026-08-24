@@ -4,6 +4,8 @@ import { useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 
+import { createCustomer, createObject } from '@/entities/business/api/business-api';
+import { useObjectsQuery } from '@/entities/business/api/business-queries';
 import type { Estimate, EstimateObjectType } from '@/entities/estimate/model/types';
 import {
   createEstimateSchema,
@@ -24,6 +26,15 @@ interface ZoneTemplate {
   key: string;
   recommended: number;
 }
+
+const objectTypes: EstimateObjectType[] = [
+  'Apartment',
+  'PrivateHouse',
+  'CommercialSpace',
+  'Office',
+  'IndustrialSpace',
+  'Other',
+];
 
 const zoneTemplates: Record<EstimateObjectType, ZoneTemplate[]> = {
   Apartment: [
@@ -97,6 +108,7 @@ const createZoneCounts = (objectType: EstimateObjectType, repairScope: RepairSco
 export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormProps) {
   const { t } = useTranslation();
   const createMutation = useCreateEstimate();
+  const objectsQuery = useObjectsQuery();
   const [step, setStep] = useState<1 | 2>(1);
   const [repairScope, setRepairScope] = useState<RepairScope>('full');
   const [zoneCounts, setZoneCounts] = useState<Record<string, number>>({});
@@ -109,16 +121,28 @@ export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormPr
   } = useForm<CreateEstimateFormValues>({
     defaultValues: {
       currency: 'UAH',
+      customerEmail: '',
+      customerName: '',
+      customerNote: '',
+      customerPhone: '',
       estimateNumber: '',
       notes: '',
       objectAddress: '',
+      objectDescription: '',
+      objectId: '',
+      objectMode: 'existing',
+      objectName: '',
       objectType: 'Apartment',
       totalArea: '',
     },
     resolver: zodResolver(createEstimateSchema),
   });
-  const objectType = watch('objectType') as EstimateObjectType;
-  const activeTemplate = zoneTemplates[objectType];
+  const objectMode = watch('objectMode');
+  const selectedObjectId = watch('objectId');
+  const selectedObject = objectsQuery.data?.items.find((estimateObject) => estimateObject.id === selectedObjectId);
+  const newObjectType = watch('objectType') as EstimateObjectType;
+  const activeObjectType = objectMode === 'existing' && selectedObject ? selectedObject.objectType : newObjectType;
+  const activeTemplate = zoneTemplates[activeObjectType];
   const configuredZones = useMemo(
     () =>
       activeTemplate.flatMap((zone) => {
@@ -140,10 +164,20 @@ export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormPr
   };
 
   const openZoneConfigurator = (values: CreateEstimateFormValues) => {
-    if (zoneDraftObjectType !== values.objectType) {
+    const nextObjectType =
+      values.objectMode === 'existing'
+        ? objectsQuery.data?.items.find((estimateObject) => estimateObject.id === values.objectId)?.objectType
+        : values.objectType;
+
+    if (!nextObjectType) {
+      toast.error(t('estimates.validation.object'));
+      return;
+    }
+
+    if (zoneDraftObjectType !== nextObjectType) {
       setRepairScope('full');
-      setZoneCounts(createZoneCounts(values.objectType, 'full'));
-      setZoneDraftObjectType(values.objectType);
+      setZoneCounts(createZoneCounts(nextObjectType, 'full'));
+      setZoneDraftObjectType(nextObjectType);
     }
 
     setStep(2);
@@ -151,7 +185,7 @@ export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormPr
 
   const setScope = (nextScope: RepairScope) => {
     setRepairScope(nextScope);
-    setZoneCounts(createZoneCounts(objectType, nextScope));
+    setZoneCounts(createZoneCounts(activeObjectType, nextScope));
   };
 
   const changeZoneCount = (zoneKey: string, delta: number) => {
@@ -161,34 +195,55 @@ export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormPr
     }));
   };
 
-  const onSubmit = (values: CreateEstimateFormValues) => {
+  const onSubmit = async (values: CreateEstimateFormValues) => {
     if (configuredZones.length === 0) {
       toast.error(t('estimates.validation.zones'));
       return;
     }
 
-    createMutation.mutate(
-      {
-        currency: values.currency.trim().toUpperCase(),
-        estimateNumber: values.estimateNumber.trim(),
-        materialItems: [],
-        notes: values.notes.trim() || undefined,
-        objectAddress: values.objectAddress.trim() || null,
-        objectType: values.objectType,
-        totalArea: values.totalArea === '' ? null : Number(values.totalArea),
-        workItems: [],
-        zones: configuredZones,
-      },
-      {
-        onError: () => {
-          toast.error(t('estimates.messages.createError'));
+    try {
+      const objectId =
+        values.objectMode === 'existing'
+          ? values.objectId
+          : await createCustomer({
+              email: values.customerEmail.trim() || null,
+              name: values.customerName.trim(),
+              note: values.customerNote.trim() || null,
+              phone: values.customerPhone.trim() || null,
+            }).then((customer) =>
+              createObject({
+                address: values.objectAddress.trim() || null,
+                customerId: customer.id,
+                description: values.objectDescription.trim() || null,
+                name: values.objectName.trim(),
+                objectType: values.objectType,
+                totalArea: values.totalArea === '' ? null : Number(values.totalArea),
+              }),
+            ).then((estimateObject) => estimateObject.id);
+
+      createMutation.mutate(
+        {
+          currency: values.currency.trim().toUpperCase(),
+          estimateNumber: values.estimateNumber.trim(),
+          materialItems: [],
+          notes: values.notes.trim() || undefined,
+          objectId,
+          workItems: [],
+          zones: configuredZones,
         },
-        onSuccess: (estimate) => {
-          toast.success(t('estimates.messages.created'));
-          onCreated(estimate);
+        {
+          onError: () => {
+            toast.error(t('estimates.messages.createError'));
+          },
+          onSuccess: (estimate) => {
+            toast.success(t('estimates.messages.created'));
+            onCreated(estimate);
+          },
         },
-      },
-    );
+      );
+    } catch {
+      toast.error(t('estimates.messages.createError'));
+    }
   };
 
   return (
@@ -223,102 +278,172 @@ export function CreateEstimateForm({ onCancel, onCreated }: CreateEstimateFormPr
 
       <form className="mt-5 space-y-5" noValidate onSubmit={handleSubmit(onSubmit)}>
         {step === 1 ? (
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="estimate-number">
-                {t('estimates.form.number')}
+          <div className="space-y-5">
+            <div className="grid gap-2 sm:grid-cols-2" role="group">
+              <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 text-sm">
+                <input type="radio" value="existing" {...register('objectMode', { onChange: resetZoneDraft })} />
+                {t('estimates.form.existingObject')}
               </label>
-              <input
-                aria-invalid={Boolean(errors.estimateNumber)}
-                autoComplete="off"
-                className={fieldClassName}
-                id="estimate-number"
-                placeholder={t('estimates.form.numberPlaceholder')}
-                {...register('estimateNumber')}
-              />
-              {errors.estimateNumber ? (
-                <p className="text-sm text-destructive" role="alert">
-                  {t('estimates.validation.number')}
-                </p>
-              ) : null}
+              <label className="flex cursor-pointer items-center gap-2 rounded-md border border-border px-3 py-2 text-sm">
+                <input type="radio" value="new" {...register('objectMode', { onChange: resetZoneDraft })} />
+                {t('estimates.form.newObject')}
+              </label>
             </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="estimate-object-type">
-                {t('estimates.form.objectType')}
-              </label>
-              <select
-                className={fieldClassName}
-                id="estimate-object-type"
-                {...register('objectType', {
-                  onChange: resetZoneDraft,
-                })}
-              >
-                {Object.keys(zoneTemplates).map((type) => (
-                  <option key={type} value={type}>
-                    {t(`estimates.objectTypes.${type}`)}
-                  </option>
-                ))}
-              </select>
-            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="estimate-number">
+                  {t('estimates.form.number')}
+                </label>
+                <input
+                  aria-invalid={Boolean(errors.estimateNumber)}
+                  autoComplete="off"
+                  className={fieldClassName}
+                  id="estimate-number"
+                  placeholder={t('estimates.form.numberPlaceholder')}
+                  {...register('estimateNumber')}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="estimate-address">
-                {t('estimates.form.objectAddress')}
-              </label>
-              <input
-                aria-invalid={Boolean(errors.objectAddress)}
-                className={fieldClassName}
-                id="estimate-address"
-                placeholder={t('estimates.form.objectAddressPlaceholder')}
-                {...register('objectAddress')}
-              />
-            </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium" htmlFor="estimate-currency">
+                  {t('estimates.form.currency')}
+                </label>
+                <input
+                  aria-invalid={Boolean(errors.currency)}
+                  autoCapitalize="characters"
+                  autoComplete="off"
+                  className={`${fieldClassName} uppercase`}
+                  id="estimate-currency"
+                  maxLength={3}
+                  placeholder={t('estimates.form.currencyPlaceholder')}
+                  {...register('currency')}
+                />
+              </div>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="estimate-area">
-                {t('estimates.form.totalArea')}
-              </label>
-              <input
-                aria-invalid={Boolean(errors.totalArea)}
-                className={fieldClassName}
-                id="estimate-area"
-                inputMode="decimal"
-                min="0.01"
-                placeholder={t('estimates.form.totalAreaPlaceholder')}
-                step="0.01"
-                type="number"
-                {...register('totalArea')}
-              />
-            </div>
+              {objectMode === 'existing' ? (
+                <div className="space-y-2 md:col-span-2">
+                  <label className="text-sm font-medium" htmlFor="estimate-object">
+                    {t('estimates.form.object')}
+                  </label>
+                  <select
+                    aria-invalid={Boolean(errors.objectId)}
+                    className={fieldClassName}
+                    disabled={objectsQuery.isPending}
+                    id="estimate-object"
+                    {...register('objectId', { onChange: resetZoneDraft })}
+                  >
+                    <option value="">{t('estimates.form.selectObject')}</option>
+                    {(objectsQuery.data?.items ?? []).map((estimateObject) => (
+                      <option key={estimateObject.id} value={estimateObject.id}>
+                        {estimateObject.name}
+                        {estimateObject.address ? ` · ${estimateObject.address}` : ''}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              ) : (
+                <>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="customer-name">
+                      {t('estimates.form.customerName')}
+                    </label>
+                    <input className={fieldClassName} id="customer-name" {...register('customerName')} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="customer-phone">
+                      {t('estimates.form.customerPhone')}
+                    </label>
+                    <input className={fieldClassName} id="customer-phone" {...register('customerPhone')} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="customer-email">
+                      {t('estimates.form.customerEmail')}
+                    </label>
+                    <input className={fieldClassName} id="customer-email" {...register('customerEmail')} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="estimate-object-type">
+                      {t('estimates.form.objectType')}
+                    </label>
+                    <select
+                      className={fieldClassName}
+                      id="estimate-object-type"
+                      {...register('objectType', { onChange: resetZoneDraft })}
+                    >
+                      {objectTypes.map((type) => (
+                        <option key={type} value={type}>
+                          {t(`estimates.objectTypes.${type}`)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="object-name">
+                      {t('estimates.form.objectName')}
+                    </label>
+                    <input className={fieldClassName} id="object-name" {...register('objectName')} />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="estimate-address">
+                      {t('estimates.form.objectAddress')}
+                    </label>
+                    <input
+                      className={fieldClassName}
+                      id="estimate-address"
+                      placeholder={t('estimates.form.objectAddressPlaceholder')}
+                      {...register('objectAddress')}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium" htmlFor="estimate-area">
+                      {t('estimates.form.totalArea')}
+                    </label>
+                    <input
+                      className={fieldClassName}
+                      id="estimate-area"
+                      inputMode="decimal"
+                      min="0.01"
+                      placeholder={t('estimates.form.totalAreaPlaceholder')}
+                      step="0.01"
+                      type="number"
+                      {...register('totalArea')}
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-medium" htmlFor="object-description">
+                      {t('estimates.form.objectDescription')}
+                    </label>
+                    <textarea
+                      className="min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                      id="object-description"
+                      {...register('objectDescription')}
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
+                    <label className="text-sm font-medium" htmlFor="customer-note">
+                      {t('estimates.form.customerNote')}
+                    </label>
+                    <textarea
+                      className="min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                      id="customer-note"
+                      {...register('customerNote')}
+                    />
+                  </div>
+                </>
+              )}
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium" htmlFor="estimate-currency">
-                {t('estimates.form.currency')}
-              </label>
-              <input
-                aria-invalid={Boolean(errors.currency)}
-                autoCapitalize="characters"
-                autoComplete="off"
-                className={`${fieldClassName} uppercase`}
-                id="estimate-currency"
-                maxLength={3}
-                placeholder={t('estimates.form.currencyPlaceholder')}
-                {...register('currency')}
-              />
-            </div>
-
-            <div className="space-y-2 md:col-span-2">
-              <label className="text-sm font-medium" htmlFor="estimate-notes">
-                {t('estimates.form.notes')}
-              </label>
-              <textarea
-                aria-invalid={Boolean(errors.notes)}
-                className="min-h-24 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
-                id="estimate-notes"
-                placeholder={t('estimates.form.notesPlaceholder')}
-                {...register('notes')}
-              />
+              <div className="space-y-2 md:col-span-2">
+                <label className="text-sm font-medium" htmlFor="estimate-notes">
+                  {t('estimates.form.notes')}
+                </label>
+                <textarea
+                  className="min-h-24 w-full rounded-md border border-input bg-background px-3 py-2 text-sm shadow-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
+                  id="estimate-notes"
+                  placeholder={t('estimates.form.notesPlaceholder')}
+                  {...register('notes')}
+                />
+              </div>
             </div>
           </div>
         ) : (

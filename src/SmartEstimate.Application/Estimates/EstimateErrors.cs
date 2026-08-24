@@ -16,6 +16,10 @@ internal static class EstimateErrors
         "EstimateNotFound",
         $"Estimate '{id}' was not found.");
 
+    public static Error PermanentDeleteRequiresSoftDelete() => new(
+        "EstimatePermanentDeleteRequiresSoftDelete",
+        "Estimate must be soft-deleted before it can be permanently deleted.");
+
     public static Error WorkItemNotFound(Guid estimateId, Guid itemId) => new(
         "EstimateWorkItemNotFound",
         $"Work item '{itemId}' was not found in estimate '{estimateId}'.");
@@ -27,6 +31,10 @@ internal static class EstimateErrors
     public static Error ZoneNotFound(Guid estimateId, Guid zoneId) => new(
         "EstimateZoneNotFound",
         $"Zone '{zoneId}' was not found in estimate '{estimateId}'.");
+
+    public static Error ObjectNotFound(Guid objectId) => new(
+        "ObjectNotFound",
+        $"Object '{objectId}' was not found.");
 
     public static Error ConstructionWorkNotFound(string constructionWorkId) => new(
         "ConstructionWorkNotFound",

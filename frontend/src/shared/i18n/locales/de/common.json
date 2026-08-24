@@ -1,8 +1,22 @@
 {
   "actions": {
+    "cancel": "Abbrechen",
     "retry": "Erneut versuchen"
   },
   "errors": {
+    "api": {
+      "CustomerHasObjects": "Dieser Kunde kann nicht endgültig gelöscht werden, weil verknüpfte Objekte vorhanden sind.",
+      "CustomerNotFound": "Kunde nicht gefunden.",
+      "EstimateNotFound": "Kostenvoranschlag nicht gefunden.",
+      "EstimateNumberAlreadyExists": "Ein Kostenvoranschlag mit dieser Nummer existiert bereits.",
+      "EstimatePermanentDeleteRequiresSoftDelete": "Löschen Sie den Kostenvoranschlag zuerst normal, bevor Sie ihn endgültig löschen.",
+      "ObjectHasEstimates": "Dieses Objekt kann nicht endgültig gelöscht werden, weil verknüpfte Kostenvoranschläge vorhanden sind.",
+      "ObjectNotFound": "Objekt nicht gefunden.",
+      "PriceNotFound": "Preis nicht gefunden.",
+      "PriceTargetInactive": "Die Preisposition ist inaktiv.",
+      "PriceTargetNotFound": "Die Preisposition wurde nicht gefunden.",
+      "ValidationError": "Prüfen Sie die eingegebenen Daten."
+    },
     "requestFailed": "Die Anfrage konnte nicht abgeschlossen werden."
   },
   "foundation": {
@@ -32,8 +46,243 @@
     "expandSidebar": "Seitenleiste ausklappen",
     "foundation": "Foundation",
     "knowledgeStudio": "Knowledge Studio",
+    "objects": "Objekte",
     "primaryNavigation": "Hauptnavigation",
     "productName": "SmartEstimate",
-    "skipToContent": "Zum Arbeitsbereich springen"
+    "skipToContent": "Zum Arbeitsbereich springen",
+    "aiAssistant": "AI-Assistent",
+    "customers": "Kunden",
+    "materials": "Materialien",
+    "overview": "Übersicht",
+    "pricing": "Preisgestaltung",
+    "reports": "Berichte",
+    "settings": "Einstellungen"
+  },
+  "breadcrumbs": {
+    "label": "Breadcrumbs"
+  },
+  "comingSoon": {
+    "eyebrow": "In Entwicklung",
+    "openKnowledgeStudio": "Knowledge Studio öffnen"
+  },
+  "overview": {
+    "actions": {
+      "addCustomer": "Kunde hinzufügen",
+      "createEstimate": "Kostenvoranschlag erstellen",
+      "createObject": "Objekt erstellen",
+      "openKnowledgeStudio": "Knowledge Studio öffnen"
+    },
+    "description": "Ein kompakter Überblick über Kostenvoranschläge, aktuelle Objekte und schnelle Einstiegspunkte.",
+    "eyebrow": "Übersicht",
+    "metrics": {
+      "approved": "Freigegeben",
+      "completed": "Abgeschlossen",
+      "draft": "Entwürfe",
+      "inProgress": "In Arbeit",
+      "sent": "Gesendet",
+      "total": "Kostenvoranschläge"
+    },
+    "openAll": "Alle öffnen",
+    "quickActions": {
+      "title": "Schnellaktionen"
+    },
+    "recentEstimates": {
+      "empty": "Es wurden noch keine Kostenvoranschläge erstellt.",
+      "title": "Aktuelle Kostenvoranschläge"
+    },
+    "recentObjects": {
+      "empty": "Es wurden noch keine Objekte erstellt.",
+      "noCustomer": "Kein Kunde angegeben",
+      "title": "Aktuelle Objekte"
+    },
+    "states": {
+      "error": "Die Übersicht ist derzeit nicht verfügbar. Bitte Verbindung prüfen und erneut versuchen.",
+      "loading": "Übersicht wird geladen..."
+    },
+    "title": "SmartEstimate Übersicht"
+  },
+  "customers": {
+    "actions": {
+      "archive": "Archivieren",
+      "archived": "Archiviert",
+      "deletePermanently": "Endgültig löschen",
+      "edit": "Bearbeiten",
+      "restore": "Wiederherstellen"
+    },
+    "backToList": "Zurück zu Kunden",
+    "create": {
+      "action": "Kunde hinzufügen",
+      "cancel": "Abbrechen",
+      "submit": "Kunde erstellen",
+      "title": "Neuer Kunde"
+    },
+    "delete": {
+      "confirmation": "Diesen Kunden endgültig löschen? Diese Aktion kann nicht rückgängig gemacht werden.",
+      "title": "Kunde endgültig löschen"
+    },
+    "description": "Eine minimale Kundenliste, verbunden mit Objekten und Kostenvoranschlägen.",
+    "details": {
+      "createdAt": "Erstellt",
+      "eyebrow": "Kunde",
+      "info": "Kundeninformationen",
+      "noObjects": "Für diesen Kunden gibt es noch keine Objekte.",
+      "objects": "Verknüpfte Objekte",
+      "updatedAt": "Zuletzt geändert"
+    },
+    "edit": {
+      "submit": "Änderungen speichern",
+      "title": "Kunde bearbeiten"
+    },
+    "eyebrow": "Kunden",
+    "filters": {
+      "active": "Aktiv",
+      "all": "Alle",
+      "archived": "Archiviert"
+    },
+    "form": {
+      "email": "E-Mail",
+      "name": "Kundenname",
+      "note": "Notiz",
+      "phone": "Telefon"
+    },
+    "messages": {
+      "archiveError": "Kunde konnte nicht archiviert werden.",
+      "archived": "Kunde archiviert.",
+      "created": "Kunde erstellt.",
+      "createError": "Kunde konnte nicht erstellt werden.",
+      "deleted": "Kunde endgültig gelöscht.",
+      "deleteError": "Kunde konnte nicht gelöscht werden.",
+      "restored": "Kunde wiederhergestellt.",
+      "restoreError": "Kunde konnte nicht wiederhergestellt werden.",
+      "updated": "Kunde aktualisiert.",
+      "updateError": "Kunde konnte nicht aktualisiert werden."
+    },
+    "search": "Suche nach Name, Telefon oder E-Mail",
+    "states": {
+      "emptyAllDescription": "Es wurden noch keine Kunden erstellt.",
+      "emptyAllTitle": "Kundenliste ist leer",
+      "emptyArchivedDescription": "Archivierte Kunden erscheinen hier.",
+      "emptyArchivedTitle": "Archiv ist leer",
+      "emptyDescription": "Fügen Sie den ersten Kunden hinzu oder erstellen Sie ihn beim Erstellen eines Kostenvoranschlags.",
+      "emptyTitle": "Noch keine Kunden",
+      "error": "Kunden sind derzeit nicht verfügbar.",
+      "loading": "Kunden werden geladen...",
+      "unavailableDescription": "Der Kunde wurde möglicherweise gelöscht oder ist nicht verfügbar.",
+      "unavailableTitle": "Kunde nicht verfügbar"
+    },
+    "title": "Kunden",
+    "validation": {
+      "name": "Geben Sie den Kundennamen ein."
+    }
+  },
+  "pricing": {
+    "actions": {
+      "archive": "Archivieren",
+      "next": "Nächste Seite",
+      "previous": "Vorherige Seite",
+      "save": "Speichern"
+    },
+    "description": "Aktuelle Preise für Materialien und Leistungen mit Historie, Währung, Lieferant und Region.",
+    "dialogs": {
+      "archiveDescription": "Der Preis wird für neue Berechnungen nicht mehr verwendet, bleibt aber in der Historie erhalten.",
+      "archiveTitle": "Diesen Preis archivieren?"
+    },
+    "editor": {
+      "currency": "Währung",
+      "date": "Datum",
+      "fallbackTitle": "Preis",
+      "notes": "Notizen",
+      "price": "Preis",
+      "region": "Region",
+      "selectRecord": "Eintrag auswählen",
+      "source": "Quelle",
+      "supplier": "Lieferant"
+    },
+    "eyebrow": "Preisgrundlage",
+    "fallback": {
+      "defaultSupplier": "Kein Lieferant",
+      "globalRegion": "Alle Regionen",
+      "noCategory": "Keine Kategorie"
+    },
+    "filters": {
+      "allCategories": "Alle Kategorien",
+      "category": "Kategorie",
+      "currency": "Währung",
+      "missingOnly": "Ohne Preis",
+      "region": "Region",
+      "regionPlaceholder": "UA-KY",
+      "search": "Suche",
+      "supplier": "Lieferant",
+      "supplierShort": "Lieferant"
+    },
+    "history": {
+      "empty": "Noch keine Historie.",
+      "loading": "Wird geladen...",
+      "title": "Historie"
+    },
+    "messages": {
+      "archiveError": "Der Preis konnte nicht archiviert werden.",
+      "archived": "Preis archiviert.",
+      "saveError": "Der Preis konnte nicht gespeichert werden.",
+      "saved": "Preis gespeichert.",
+      "validationError": "Geben Sie einen gültigen Preis ein."
+    },
+    "pagination": "Seite {{page}} von {{total}}",
+    "sources": {
+      "AiRecommendation": "KI-Empfehlung",
+      "Import": "Import",
+      "Manual": "Manuelle Eingabe",
+      "MarketReference": "Marktreferenz",
+      "SupplierIntegration": "Lieferantenintegration"
+    },
+    "states": {
+      "empty": "Keine Einträge gefunden.",
+      "error": "Der Preiskatalog ist derzeit nicht verfügbar. Prüfen Sie die Verbindung und versuchen Sie es erneut.",
+      "loading": "Preise werden geladen..."
+    },
+    "status": {
+      "Active": "Aktiv",
+      "Archived": "Archiviert"
+    },
+    "targets": {
+      "ConstructionWork": "Leistungen",
+      "Material": "Materialien"
+    },
+    "title": "Preisverwaltung"
+  },
+  "placeholders": {
+    "aiAssistant": {
+      "description": "Der AI-Assistent kommt nach AI Gateway und Empfehlungen. In dieser Phase sind keine AI APIs verbunden.",
+      "title": "AI-Assistent"
+    },
+    "materials": {
+      "description": "Der operative Materialkatalog wird derzeit im Knowledge Studio verwaltet. Ein separates Materialmodul folgt später für Einkauf und Verbrauch.",
+      "title": "Materialien"
+    },
+    "pricing": {
+      "description": "Hier werden Preislisten, regionale Preise und Preisverlauf verwaltet. Die Pricing Engine ist noch nicht implementiert.",
+      "title": "Preisgestaltung"
+    },
+    "reports": {
+      "description": "Dieser Bereich wird Analysen, Finanzsummen und Objektberichte enthalten. Das Reporting-System ist noch nicht implementiert.",
+      "title": "Berichte"
+    }
+  },
+  "settings": {
+    "dateFormats": {
+      "long": "Lang",
+      "medium": "Mittel",
+      "short": "Kurz"
+    },
+    "description": "Grundlegende Oberflächeneinstellungen ohne Benutzerprofil oder Authentifizierung.",
+    "eyebrow": "Einstellungen",
+    "interface": {
+      "currencyFormat": "Währungsformat",
+      "dateFormat": "Datumsformat",
+      "description": "Diese Einstellungen betreffen nur die Anzeige in der Oberfläche.",
+      "language": "Sprache der Oberfläche",
+      "title": "Oberfläche"
+    },
+    "title": "Einstellungen"
   }
 }

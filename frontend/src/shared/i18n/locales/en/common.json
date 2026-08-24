@@ -1,8 +1,22 @@
 {
   "actions": {
+    "cancel": "Cancel",
     "retry": "Try again"
   },
   "errors": {
+    "api": {
+      "CustomerHasObjects": "This customer cannot be deleted permanently because it has related objects.",
+      "CustomerNotFound": "Customer not found.",
+      "EstimateNotFound": "Estimate not found.",
+      "EstimateNumberAlreadyExists": "An estimate with this number already exists.",
+      "EstimatePermanentDeleteRequiresSoftDelete": "Delete the estimate first, then delete it permanently.",
+      "ObjectHasEstimates": "This object cannot be deleted permanently because it has related estimates.",
+      "ObjectNotFound": "Object not found.",
+      "PriceNotFound": "Price not found.",
+      "PriceTargetInactive": "The pricing target is inactive.",
+      "PriceTargetNotFound": "The pricing target was not found.",
+      "ValidationError": "Check the entered data."
+    },
     "requestFailed": "The request could not be completed."
   },
   "foundation": {
@@ -32,8 +46,243 @@
     "expandSidebar": "Expand sidebar",
     "foundation": "Foundation",
     "knowledgeStudio": "Knowledge Studio",
+    "objects": "Objects",
     "primaryNavigation": "Primary navigation",
     "productName": "SmartEstimate",
-    "skipToContent": "Skip to workspace"
+    "skipToContent": "Skip to workspace",
+    "aiAssistant": "AI Assistant",
+    "customers": "Customers",
+    "materials": "Materials",
+    "overview": "Overview",
+    "pricing": "Pricing",
+    "reports": "Reports",
+    "settings": "Settings"
+  },
+  "breadcrumbs": {
+    "label": "Breadcrumbs"
+  },
+  "comingSoon": {
+    "eyebrow": "In development",
+    "openKnowledgeStudio": "Open Knowledge Studio"
+  },
+  "overview": {
+    "actions": {
+      "addCustomer": "Add customer",
+      "createEstimate": "Create estimate",
+      "createObject": "Create object",
+      "openKnowledgeStudio": "Open Knowledge Studio"
+    },
+    "description": "A concise view of estimates, recent objects, and shortcuts into the main workflows.",
+    "eyebrow": "Overview",
+    "metrics": {
+      "approved": "Approved",
+      "completed": "Completed",
+      "draft": "Drafts",
+      "inProgress": "In progress",
+      "sent": "Sent",
+      "total": "Total estimates"
+    },
+    "openAll": "Open all",
+    "quickActions": {
+      "title": "Quick actions"
+    },
+    "recentEstimates": {
+      "empty": "No estimates have been created yet.",
+      "title": "Recent estimates"
+    },
+    "recentObjects": {
+      "empty": "No objects have been created yet.",
+      "noCustomer": "Customer not specified",
+      "title": "Recent objects"
+    },
+    "states": {
+      "error": "Overview is unavailable. Check the connection and try again.",
+      "loading": "Loading overview..."
+    },
+    "title": "SmartEstimate Overview"
+  },
+  "customers": {
+    "actions": {
+      "archive": "Archive",
+      "archived": "Archived",
+      "deletePermanently": "Delete permanently",
+      "edit": "Edit",
+      "restore": "Restore"
+    },
+    "backToList": "Back to customers",
+    "create": {
+      "action": "Add customer",
+      "cancel": "Cancel",
+      "submit": "Create customer",
+      "title": "New customer"
+    },
+    "delete": {
+      "confirmation": "Delete this customer permanently? This action cannot be undone.",
+      "title": "Delete customer permanently"
+    },
+    "description": "A minimal customer list connected to objects and estimates.",
+    "details": {
+      "createdAt": "Created",
+      "eyebrow": "Customer",
+      "info": "Customer information",
+      "noObjects": "This customer has no objects yet.",
+      "objects": "Related objects",
+      "updatedAt": "Last updated"
+    },
+    "edit": {
+      "submit": "Save changes",
+      "title": "Edit customer"
+    },
+    "eyebrow": "Customers",
+    "filters": {
+      "active": "Active",
+      "all": "All",
+      "archived": "Archived"
+    },
+    "form": {
+      "email": "Email",
+      "name": "Customer name",
+      "note": "Note",
+      "phone": "Phone"
+    },
+    "messages": {
+      "archiveError": "Could not archive customer.",
+      "archived": "Customer archived.",
+      "created": "Customer created.",
+      "createError": "Could not create customer.",
+      "deleted": "Customer deleted permanently.",
+      "deleteError": "Could not delete customer.",
+      "restored": "Customer restored.",
+      "restoreError": "Could not restore customer.",
+      "updated": "Customer updated.",
+      "updateError": "Could not update customer."
+    },
+    "search": "Search by name, phone, or email",
+    "states": {
+      "emptyAllDescription": "No customers have been created yet.",
+      "emptyAllTitle": "Customer list is empty",
+      "emptyArchivedDescription": "Archived customers will appear here.",
+      "emptyArchivedTitle": "Archive is empty",
+      "emptyDescription": "Add the first customer or create one while creating an estimate.",
+      "emptyTitle": "No customers yet",
+      "error": "Customers are unavailable.",
+      "loading": "Loading customers...",
+      "unavailableDescription": "The customer may have been deleted or is unavailable.",
+      "unavailableTitle": "Customer unavailable"
+    },
+    "title": "Customers",
+    "validation": {
+      "name": "Enter the customer name."
+    }
+  },
+  "pricing": {
+    "actions": {
+      "archive": "Archive",
+      "next": "Next page",
+      "previous": "Previous page",
+      "save": "Save"
+    },
+    "description": "Current prices for materials and work items with history, currency, supplier, and region.",
+    "dialogs": {
+      "archiveDescription": "The price will no longer be used for new calculations, but it will remain in the history.",
+      "archiveTitle": "Archive this price?"
+    },
+    "editor": {
+      "currency": "Currency",
+      "date": "Date",
+      "fallbackTitle": "Price",
+      "notes": "Notes",
+      "price": "Price",
+      "region": "Region",
+      "selectRecord": "Select a record",
+      "source": "Source",
+      "supplier": "Supplier"
+    },
+    "eyebrow": "Pricing foundation",
+    "fallback": {
+      "defaultSupplier": "No supplier",
+      "globalRegion": "All regions",
+      "noCategory": "No category"
+    },
+    "filters": {
+      "allCategories": "All categories",
+      "category": "Category",
+      "currency": "Currency",
+      "missingOnly": "Missing price",
+      "region": "Region",
+      "regionPlaceholder": "UA-KY",
+      "search": "Search",
+      "supplier": "Supplier",
+      "supplierShort": "Supplier"
+    },
+    "history": {
+      "empty": "No history yet.",
+      "loading": "Loading...",
+      "title": "History"
+    },
+    "messages": {
+      "archiveError": "The price could not be archived.",
+      "archived": "Price archived.",
+      "saveError": "The price could not be saved.",
+      "saved": "Price saved.",
+      "validationError": "Enter a valid price."
+    },
+    "pagination": "Page {{page}} of {{total}}",
+    "sources": {
+      "AiRecommendation": "AI recommendation",
+      "Import": "Import",
+      "Manual": "Manual entry",
+      "MarketReference": "Market reference",
+      "SupplierIntegration": "Supplier integration"
+    },
+    "states": {
+      "empty": "No records found.",
+      "error": "The pricing catalog is unavailable right now. Check your connection and try again.",
+      "loading": "Loading prices..."
+    },
+    "status": {
+      "Active": "Active",
+      "Archived": "Archived"
+    },
+    "targets": {
+      "ConstructionWork": "Work items",
+      "Material": "Materials"
+    },
+    "title": "Pricing"
+  },
+  "placeholders": {
+    "aiAssistant": {
+      "description": "The AI assistant will arrive after the AI Gateway and recommendation workflow are implemented. No AI APIs are connected at this stage.",
+      "title": "AI Assistant"
+    },
+    "materials": {
+      "description": "The operational material catalog is currently managed in Knowledge Studio. A dedicated materials module will come later for purchasing and consumption workflows.",
+      "title": "Materials"
+    },
+    "pricing": {
+      "description": "This workspace will manage price lists, regional prices, and price history. The Pricing Engine is not implemented yet.",
+      "title": "Pricing"
+    },
+    "reports": {
+      "description": "This workspace will contain analytics, financial summaries, and object reports. The full reporting system is not implemented yet.",
+      "title": "Reports"
+    }
+  },
+  "settings": {
+    "dateFormats": {
+      "long": "Long",
+      "medium": "Medium",
+      "short": "Short"
+    },
+    "description": "Basic interface settings without user profile or authentication.",
+    "eyebrow": "Settings",
+    "interface": {
+      "currencyFormat": "Currency format",
+      "dateFormat": "Date format",
+      "description": "These preferences affect interface display only.",
+      "language": "Interface language",
+      "title": "Interface"
+    },
+    "title": "Settings"
   }
 }

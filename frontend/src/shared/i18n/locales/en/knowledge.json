@@ -30,7 +30,16 @@
       "save": "Save"
     },
     "ai": { "comingSoon": "Fill with AI — Sprint 5" },
-    "card": { "createdAt": "Created", "id": "ID", "updatedAt": "Updated", "version": "Version" },
+    "card": {
+      "createdAt": "Created",
+      "id": "ID",
+      "noCategory": "No category",
+      "noUnit": "No unit",
+      "parentCategory": "Parent category: {{category}}",
+      "rootCategory": "Root category",
+      "updatedAt": "Updated",
+      "version": "Version"
+    },
     "description": "Manage construction knowledge without editing YAML files.",
     "empty": {
       "description": "Create the first record for this section.",
@@ -87,5 +96,46 @@
     },
     "status": { "active": "Active", "archived": "Archived", "draft": "Draft" },
     "title": "Knowledge Studio"
+  },
+  "materials": {
+    "actions": {
+      "manageKnowledge": "Manage in Knowledge Studio"
+    },
+    "catalog": {
+      "category": "Category",
+      "count_one": "{{count}} material",
+      "count_other": "{{count}} materials",
+      "noCategory": "No category",
+      "noDescription": "No description yet",
+      "title": "Material catalog",
+      "unit": "Measurement unit",
+      "unitUnknown": "Unit not found",
+      "updatedAt": "Updated"
+    },
+    "description": "A daily working catalog of materials from the existing KnowledgeMaterials base.",
+    "eyebrow": "Catalog",
+    "filters": {
+      "allCategories": "All categories",
+      "allStatuses": "All statuses",
+      "category": "Category",
+      "search": "Search materials",
+      "sort": "Sort",
+      "status": "Status"
+    },
+    "pagination": "Page {{page}} of {{total}}",
+    "states": {
+      "emptyDescription": "Change the search or filters to find the material you need.",
+      "emptyTitle": "No materials found",
+      "error": "The material catalog is currently unavailable.",
+      "loading": "Loading materials...",
+      "selectMaterial": "Select a material in the list for quick preview."
+    },
+    "title": "Materials",
+    "use": {
+      "createEstimate": "Create estimate",
+      "description": "Open the estimate you need. The material will be preselected in the add-material form, and you will enter the price manually.",
+      "loading": "Loading estimates...",
+      "title": "Use in estimate"
+    }
   }
 }
